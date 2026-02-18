@@ -2871,6 +2871,818 @@ SeasonSummaryPLayerDefensiveTableHomeP90 <- MatchSummaryPLayerDefensiveSeasonDat
 SeasonSummaryPLayerDefensiveTableHomeP90
 ```
 
+### Season per game {.tabset}
+```{r}
+#| output: false
+#| echo: false
+#| message: false
+#| warning: false
+#| label: player Season per match stats tables setup
+
+PlayerMatchRole_game <- SeasonData %>%
+  mutate(
+    Out_of_play_time = round(Out_of_play_time / 60, 1),
+    EventTime = round(EventTime / 60, 1),
+    TeamEPV = if_else(`outcomeType/value` == 1, as.numeric(EPVvalue), 0)
+  ) %>%
+  group_by(TeamName, playerId, role, player_shirt, game_name, Game_date) %>%
+  summarise(
+    minutes_played = min(minutes_played, na.rm = TRUE),
+    across(
+      c(Goals, TotalShots, OFShots, SoT = OTShots, Out_Box_Shots, Touches,
+        Defensive_Third_Touches, Middle_Third_Touches, Final_Third_Touches,
+        PK_Box_Touches, SixYard_Box_Touches, Attempted_Carries, Successful_Carries,
+        Prog_Carries, Final_Third_Carries, Attempted_Passes, Successful_Passes,
+        Long_Passes, Final_Third_Passes, PK_Box_Passes, Prog_Passes, Key_Passes,
+        Assists, BCs, TeamEPV, xG, xGOT, MyxA, TeamxT, Aerial_total, Aerial_Won,
+        Aerial_Lost, Ground_Duels_Total, Ground_Duels_Won, Ground_Duels_Lost,
+        UnSuccessful_Touches, Attacking_Half_Touches, Defensive_Half_Touches,
+        Mis_Control, Dispossessed_Total, Dribbles_Total, Dribbles_Won, Dribbles_Lost,
+        Blocked_Shot, SixYard_Box_Shots, PK_Box_Shots, NPxG, UnSuccessful_Passes,
+        Successful_Long_Passes, Corners, Short_Corners, Cross_Passes, Successful_Cross,
+        UnSuccessful_Cross, Tackles_Total, Tackles_Won, Tackles_Lost, Fouls_Total,
+        Fouls_Conceeded, Fouls_Received, Interceptions_Total, Recoverys_Total,
+        Clearances_Total, Offside_Won, Offside_Lost, Carries_distance,
+        Successful_Carries_Distance, Prog_Carries_Distance),
+      ~ sum(.x, na.rm = TRUE)
+    ),
+    .groups = "drop"
+  )
+
+MatchPLayerSeasonData <- PlayerMatchRole_game %>%
+  group_by(TeamName) %>%
+  mutate(
+    Team_TotalTouches  = sum(Touches, na.rm = TRUE),
+    Team_TotalEPV      = sum(TeamEPV, na.rm = TRUE),
+    Team_TotalxG       = sum(xG, na.rm = TRUE),
+    Team_TotalPasses   = sum(Attempted_Passes, na.rm = TRUE),
+    Team_TotalDuels    = sum(Ground_Duels_Total, na.rm = TRUE),
+    Team_TotalAerials  = sum(Aerial_total, na.rm = TRUE),
+    Team_TotalShots    = sum(TotalShots, na.rm = TRUE),
+
+    Possession   = round(Touches / Team_TotalTouches, 2),
+    Pass_Success = round(Successful_Passes / Attempted_Passes, 2),
+    Aerial_Success = Aerial_Won / Aerial_total,
+    Duel_Success   = Ground_Duels_Won / Ground_Duels_Total,
+
+    On_Ball_Time = round(InPlayTime * Possession, 2),
+
+    Team_EPV_P    = round(TeamEPV / Team_TotalEPV, 2),
+    Team_xG_P     = round(xG / Team_TotalxG, 2),
+    Team_Duels_P  = round(Ground_Duels_Total / Team_TotalDuels, 2),
+    Team_Aerial_P = round(Aerial_total / Team_TotalAerials, 2),
+    Team_Passes_P = round(Attempted_Passes / Team_TotalPasses, 2),
+    Team_Shots_P  = round(TotalShots / Team_TotalShots, 2)
+  ) %>%
+    mutate(
+    across(c(Aerial_Success, Duel_Success, Pass_Success), ~ replace_na(.x, 0))
+  ) %>%
+  ungroup() %>%
+  select(
+    -Team_TotalTouches,
+    -Team_TotalEPV,
+    -Team_TotalxG,
+    -Team_TotalPasses,
+    -Team_TotalDuels,
+    -Team_TotalAerials,
+    -Team_TotalShots
+  ) %>%
+  ungroup()
+
+MD_adv_passing <- SeasonData 
+MD_adv_passing <- shift_column(data = MD_adv_passing, columns = "playerId", new_names = "Receiver", len = 1, up = TRUE)
+MD_adv_passing <- shift_column(data = MD_adv_passing, columns = "TeamName", new_names = "Receiver_Team", len = 1, up = TRUE)
+MD_adv_passing <- shift_column(data = MD_adv_passing, columns = "player_shirt", new_names = "Receiver_shirt", len = 1, up = TRUE)
+
+MD_adv_passing <- MD_adv_passing %>%
+  filter(Attempted_Passes == 1) %>% 
+  select(Receiver, Receiver_shirt, Passer_Team = TeamName, Receiver_Team, minutes_played, Attempted_Passes, Successful_Passes, Key_Passes, Prog_Passes, EPV = EPVvalue, game_name, Game_date) 
+
+MD_adv_passing <- MD_adv_passing %>%
+  group_by(Receiver, Receiver_Team, game_name, Game_date) %>%
+    summarise(Receiver_shirt = first(Receiver_shirt), Passes_Recieved = sum(Attempted_Passes), Successful_Recieved = sum(Successful_Passes), Key_Passes_Recieved = sum(Key_Passes), Prog_Passes_Recieved = sum(Prog_Passes), EPV = sum(EPV))  %>% 
+  #na.omit() %>%
+  mutate(receiving_Suc = (Successful_Recieved / Passes_Recieved)) %>%
+  replace_na(list(receiving_Suc = 0)) %>%
+  select(game_name, Game_date, Team = Receiver_Team, Shirt = Receiver_shirt, Passes_Recieved, Successful_Recieved, Key_Passes_Recieved, Prog_Passes_Recieved, EPV_Recieved = EPV, receiving_Suc)
+
+#data load check for data to be converted to number
+#MatchdayTablePass <- MD_passing_values #xt xa from fbref
+MatchdayTableAdvPass <- MD_adv_passing
+
+# add all data together
+MatchPLayerSeasonData <- MatchPLayerSeasonData %>%
+  left_join(MatchdayTableAdvPass, by = c("TeamName" = "Team", "player_shirt" = "Shirt", "playerId" = "Receiver", 'game_name' = 'game_name', 'Game_date' = 'Game_date'), copy = TRUE) %>% 
+  mutate_all(~ ifelse(is.na(.), 0, .))
+
+#work out detailed passing, and touches variables
+MatchPLayerSeasonData <- MatchPLayerSeasonData %>%
+  mutate('xG/Shot' =  xG/TotalShots,
+  'Shot Accuracy' = SoT/TotalShots,
+  'Shot Quality' = (xGOT - xG)/xG) %>%
+  mutate(`% F 3rd Carries` = Final_Third_Carries / Successful_Carries) %>%
+  mutate(`% P Carries` = Prog_Carries / Successful_Carries) %>%
+  mutate(`% Carries D Prog` = Prog_Carries_Distance / Successful_Carries_Distance) %>%
+  mutate(`Def Third Touches / Min` = Defensive_Third_Touches / minutes_played) %>%
+  mutate(`Mid Third Touches / Min` = Middle_Third_Touches / minutes_played) %>%
+  mutate(`F 3rd Touches / Min` = Final_Third_Touches / minutes_played) %>%
+  mutate(`PK Box Touches / Min` = PK_Box_Touches / minutes_played) %>%
+  mutate(`% T D Third` = Defensive_Third_Touches / Touches) %>%
+  mutate(`% T M Third` = Middle_Third_Touches / Touches) %>%
+  mutate(`% T F 3rd` = Final_Third_Touches / Touches) %>%
+  mutate(`% T PK Box` = PK_Box_Touches / Touches) %>%
+  mutate(`T / Min` = Touches / minutes_played) %>%
+  mutate(Failed_Pass = round(Attempted_Passes - Successful_Passes, 2),
+         Failed_Cross = round(Cross_Passes - Successful_Cross, 2),
+         Failed_Dribble = round(Dribbles_Total - Dribbles_Won, 2),
+         Poss_Gained = round(Interceptions_Total + Recoverys_Total + (Tackles_Won - Tackles_Lost) + (Aerial_Won - Aerial_Lost), 2),
+         Poss_Lost = (Mis_Control + Failed_Pass + Failed_Cross + Failed_Dribble + OFShots + Blocked_Shot + Dispossessed_Total + Offside_Lost),
+         Posession_Control = (Interceptions_Total + Recoverys_Total + (Tackles_Won - Tackles_Lost) + (Aerial_Won - Aerial_Lost) - (Mis_Control + Dispossessed_Total + UnSuccessful_Passes + UnSuccessful_Cross + Dribbles_Lost  + OFShots + Blocked_Shot + Offside_Lost)),) %>%
+  mutate_all(~ ifelse(is.na(.), 0, .))
+
+DefEPVData <- SeasonData %>%
+  filter(Corners == 0,
+         Short_Corners == 0,
+         FreeKicks == 0,
+         !`qualifiers/0/type/value` == 107, #throw in
+         !`qualifiers/1/type/value` == 107,
+         !`qualifiers/2/type/value` == 107,
+         !`qualifiers/3/type/value` == 107,
+           `type/value` == 1 |
+           `type/value` == 2 | 
+           `type/value` == 3 |
+           `type/value` == 4 |
+           `type/value` == 9 |
+           `type/value` == 7 |
+           `type/value` == 8 |
+           `type/value` == 10 |
+           `type/value` == 11 |
+           `type/value` == 12 |
+           `type/value` == 13 |
+           `type/value` == 14 |
+           `type/value` == 15 |
+           `type/value` == 16 |
+           `type/value` == 41 |
+           `type/value` == 44 |
+           `type/value` == 42 |
+           `type/value` == 45 |
+           `type/value` == 50 |
+           `type/value` == 52 |
+           `type/value` == 54 |
+           `type/value` == 61 |
+           `type/value` == 73 |
+           `type/value` == 74) 
+
+DefEPVData <- shift_column(data = DefEPVData, columns = "EPVvalue", new_names = "EPV_Def", len = 1, up = TRUE)
+
+DefEPVData <- DefEPVData %>%
+  filter(Defensive_Action == 1) %>%
+  select(TeamName, playerId, EPVvalue, Defensive_Action, `outcomeType/value`, EPV_Def, role, game_name) %>%
+  mutate(EPV_Faced = (EPVvalue + EPV_Def),
+    Successful_Def_EPV = ifelse(`outcomeType/value` == 1, paste0(EPV_Faced), 0),
+         Unsuccessful_Def_EPV = ifelse(`outcomeType/value` == 0, paste0(EPV_Faced), 0), 
+         Successful_Def_EPV = as.numeric(Successful_Def_EPV),
+         Unsuccessful_Def_EPV = as.numeric(Unsuccessful_Def_EPV))
+
+DefEPVData <- DefEPVData %>%
+    group_by(playerId, role, TeamName, game_name) %>% 
+  summarise(EPV_Faced = sum(EPV_Faced),
+            EPV_Won = sum(Successful_Def_EPV/EPV_Faced), 
+            EPV_Lost = sum(Unsuccessful_Def_EPV/EPV_Faced)) %>%
+    mutate_all(~ifelse(is.nan(.), 0, .)) 
+
+MatchPLayerSeasonData <- MatchPLayerSeasonData %>%
+  left_join(DefEPVData, by = c('playerId' = 'playerId', 'TeamName' = 'TeamName', 'role' = 'role', 'game_name' = 'game_name'), copy = TRUE)
+
+
+MatchPLayerSeasonData <- MatchPLayerSeasonData %>%
+    replace_na(list( EPV_Faced = 0, EPV_Won = 0, EPV_Lost = 0)) 
+
+#subset for standard player stats data table 1
+MatchPLayerPassingSeasonData <- MatchPLayerSeasonData
+
+#subset for detailed player stats data table 2
+MatchPLayerTouchesSeasonData <- MatchPLayerSeasonData
+
+#subset for detailed player stats data table 3
+MatchPLayerShootingSeasonData <- MatchPLayerSeasonData
+
+#subset for detailed player stats data table 4
+MatchPLayerDefensiveSeasonData <- MatchPLayerSeasonData
+
+
+#data wrangling for general player stat table 1
+MatchPLayerPassingSeasonData <- MatchPLayerPassingSeasonData %>%
+  select(Team = TeamName, 
+         Position = role, 
+         Name = playerId, 
+         Mins = minutes_played, 
+         '% of Team Possession' = Possession, 
+         xA = MyxA, 
+         xT = TeamxT,  
+         'Attempted Passes' = Attempted_Passes, 
+         'Successful Passes' = Successful_Passes, 
+         'Pass Success %' = Pass_Success, Assists, 
+         BCs, 
+         'Key Passes' = Key_Passes, 
+         `Long Ps`  = Long_Passes, 
+         `Final 3rd P` = Final_Third_Passes, 
+         `Prog Ps` = Prog_Passes, 
+         'PK Box P' = PK_Box_Passes, 
+         `Pass Received` = Passes_Recieved, 
+         `PPs Received` = Prog_Passes_Recieved, 
+         `KPs Recieved` = Key_Passes_Recieved, 
+         `Recieveing Suc` = receiving_Suc, 
+         `EPV Recieved` = EPV_Recieved, 
+         'EPV Created' = TeamEPV, 
+         '% of Team EPV' = Team_EPV_P)
+
+#data wrangling for detailed player stats table 2
+MatchPLayerTouchesSeasonData <- MatchPLayerTouchesSeasonData %>%
+  select(Team = TeamName, 
+         Name = playerId, 
+         Position = role, 
+         Mins = minutes_played, 
+         Touches, 
+         `Def 3rd` = Defensive_Third_Touches, 
+         `Mid 3rd` = Middle_Third_Touches, 
+         `Final 3rd` = Final_Third_Touches, 
+         `PK Box` = PK_Box_Touches, 
+         `Total / Min` = `T / Min`, 
+         `Def 3rd % TT` = `% T D Third`, 
+         `Mid Third % TT` = `% T M Third`, 
+         `Final 3rd % TT` = `% T F 3rd`, 
+         `PK Box % TT` = `% T PK Box`, 
+         `Carries` = Successful_Carries, 
+         `% Carries Prog` = `% P Carries`, 
+         `% Carries F 3rd` = `% F 3rd Carries`, 
+         `% Carries D Prog`)
+
+#data wrangling for detailed player stats table 3
+MatchPLayerShootingSeasonData <- MatchPLayerShootingSeasonData %>%
+    select(Team = TeamName, 
+           Position = role, 
+           Name = playerId, 
+           Mins = minutes_played, 
+           'Total Shots' = TotalShots, 
+           SoT, 
+           '6 yard box' = SixYard_Box_Shots,     
+           'PK Box Shot' = PK_Box_Shots, 
+           'Out Box Shots' = Out_Box_Shots, 
+           'Blocked Shot' = Blocked_Shot,
+           Goals, 
+           xG, 
+           xGOT,
+           'xG/Shot',
+           'Shot Accuracy',
+           'Shot Quality')
+
+#data wrangling for detailed player stats table 4
+MatchPLayerDefensiveSeasonData <- MatchPLayerDefensiveSeasonData %>%
+  select(Team = TeamName, 
+         Name = playerId, 
+         Position = role, 
+         Mins = minutes_played, 
+         'Aerials Total' = Aerial_total, 
+         'Aerials Won' = Aerial_Won, 
+         'Aerial Success %' = Aerial_Success, 
+         'Duels Total' = Ground_Duels_Total, 
+         'Duels Won' = Ground_Duels_Won, 
+         'Duel Success' = Duel_Success,         
+         'Tackles Total' = Tackles_Total, 
+         'Tackles Won' = Tackles_Won, 
+         'Tackles Lost' = Tackles_Lost, 
+         'Interceptions Total' = Interceptions_Total, 
+         'Recoverys Total' = Recoverys_Total,
+         'Clearances Total' = Clearances_Total, #c16
+         'Fouls Total' = Fouls_Total, 
+         'Fouls Conceeded' = Fouls_Conceeded, 
+         'Fouls Received' = Fouls_Received,
+         'Offside Won' = Offside_Won, 
+         'Offside Lost' = Offside_Lost,
+         'EPV Faced' =  EPV_Faced, 
+         'EPV Won'  = EPV_Won, 
+         'EPV Lost' = EPV_Lost,
+         'Possession Control' = Posession_Control)
+
+
+
+```
+#### Passing
+```{r}
+#| title: Passing stats
+#| results: asis
+#| label: player Passing P Season P match
+
+PassingPLinePlot <- MatchPLayerSeasonData %>%
+  filter(
+    TeamName == Match_Home,
+    player_shirt <= 38,
+    !playerId %in% c("Harvey Elliott", "Freddie Woodman", "Giovanni Leoni")
+  ) %>%
+  mutate(Game_date = as.Date(Game_date, format = "%d-%m-%Y")
+         ) %>%
+  ggplot(aes(x = Game_date, y = Pass_Success, colour = playerId, group = playerId)) +
+  geom_line(linewidth = 1) +
+  scale_y_continuous(
+    breaks = seq(0, 1, 0.1),
+    labels = percent_format(accuracy = 1)
+  ) +
+  facet_wrap(~playerId, ncol = 4) +
+  labs(x = "Month", 
+       y = "Passing Success",
+       title = paste0(Match_Home, "  Player Season Performance"),
+       caption = My_caption,
+       subtitle = paste0(Match_Fixture))  +
+  theme(plot.background = element_rect(colour = "snow", fill = "snow"),
+        panel.background = element_rect(colour = "snow", fill = "snow"),
+        plot.title = element_markdown(),
+        plot.caption = element_markdown(),
+        plot.title.position = "plot",
+        plot.subtitle = element_text(size = 12),
+        axis.title = element_text(colour = "gray12", size = 12),
+        axis.text = element_text(size = 8),
+        axis.text.x = element_text(size = 8, angle = 90),
+        text = element_text(color = "gray12", family = "Arial"),
+        legend.position = "none",
+        panel.grid.major = element_line(colour = "#454545", linewidth = 0.4, linetype = "dashed"),
+        panel.grid.minor = element_blank())
+
+PassingPLinePlot
+
+```
+
+```{r}
+#| title: Passing stats
+#| results: asis
+#| label: player Passing graph Season P match
+
+PassingLinePlot <- MatchPLayerSeasonData %>%
+  filter(
+    TeamName == Match_Home,
+    player_shirt <= 38,
+    !playerId %in% c("Harvey Elliott", "Freddie Woodman", "Giovanni Leoni")
+  ) %>%
+  mutate(Game_date = as.Date(Game_date, format = "%d-%m-%Y")
+         ) %>%
+  ggplot(aes(x = Game_date, y = Successful_Passes, colour = playerId, group = playerId)) +
+  geom_line(linewidth = 1) +
+  scale_y_continuous(
+    breaks = seq(0, 1, 0.1),
+    labels = percent_format(accuracy = 1)
+  ) +
+  facet_wrap(~playerId, ncol = 4) +
+  labs(x = "Month", 
+       y = "Passes made",
+       title = paste0(Match_Home, "  Player Season Performance"),
+       caption = My_caption,
+       subtitle = paste0(Match_Fixture))  +
+  theme(plot.background = element_rect(colour = "snow", fill = "snow"),
+        panel.background = element_rect(colour = "snow", fill = "snow"),
+        plot.title = element_markdown(),
+        plot.caption = element_markdown(),
+        plot.title.position = "plot",
+        plot.subtitle = element_text(size = 12),
+        axis.title = element_text(colour = "gray12", size = 12),
+        axis.text = element_text(size = 8),
+        axis.text.x = element_text(size = 8, angle = 90),
+        text = element_text(color = "gray12", family = "Arial"),
+        legend.position = "none",
+        panel.grid.major = element_line(colour = "#454545", linewidth = 0.4, linetype = "dashed"),
+        panel.grid.minor = element_blank())
+
+PassingLinePlot
+
+```
+#### Receiving
+```{r}
+#| title: Receiving stats
+#| results: asis
+#| label: player Receiving P graph Season P match
+
+ReceivingPLinePlot <- MatchPLayerSeasonData %>%
+  filter(
+    TeamName == Match_Home,
+    player_shirt <= 38,
+    !playerId %in% c("Harvey Elliott", "Freddie Woodman", "Giovanni Leoni")
+  ) %>%
+  mutate(Game_date = as.Date(Game_date, format = "%d-%m-%Y")
+         ) %>%
+  ggplot(aes(x = Game_date, y = receiving_Suc, colour = playerId, group = playerId)) +
+  geom_line(linewidth = 1) +
+  scale_y_continuous(
+    breaks = seq(0, 1, 0.1),
+    labels = percent_format(accuracy = 1)
+  ) +
+  facet_wrap(~playerId, ncol = 4) +
+  labs(x = "Month", 
+       y = "Receiving Success",
+       title = paste0(Match_Home, " Player Season Performance"),
+       caption = My_caption,
+       subtitle = paste0(Match_Fixture))  +
+  theme(plot.background = element_rect(colour = "snow", fill = "snow"),
+        panel.background = element_rect(colour = "snow", fill = "snow"),
+        plot.title = element_markdown(),
+        plot.caption = element_markdown(),
+        plot.title.position = "plot",
+        plot.subtitle = element_text(size = 12),
+        axis.title = element_text(colour = "gray12", size = 12),
+        axis.text = element_text(size = 8),
+        axis.text.x = element_text(size = 8, angle = 90),
+        text = element_text(color = "gray12", family = "Arial"),
+        legend.position = "none",
+        panel.grid.major = element_line(colour = "#454545", linewidth = 0.4, linetype = "dashed"),
+        panel.grid.minor = element_blank())
+
+ReceivingPLinePlot
+
+```
+
+```{r}
+#| title: Receiving stats
+#| results: asis
+#| label: player receiving graph Season P match
+
+ReceivingLinePlot <- MatchPLayerSeasonData %>%
+  filter(
+    TeamName == Match_Home,
+    player_shirt <= 38,
+    !playerId %in% c("Harvey Elliott", "Freddie Woodman", "Giovanni Leoni")
+  ) %>%
+  mutate(Game_date = as.Date(Game_date, format = "%d-%m-%Y")
+         ) %>%
+  ggplot(aes(x = Game_date, y = Passes_Recieved, colour = playerId, group = playerId)) +
+  geom_line(linewidth = 1) +
+  #scale_y_continuous(
+  #  breaks = seq(0, 1, 0.1),
+  #  labels = percent_format(accuracy = 1)
+  #) +
+  facet_wrap(~playerId, ncol = 4) +
+  labs(x = "Month", 
+       y = "Passes Received",
+       title = paste0(Match_Home, "  Player Season Performance"),
+       caption = My_caption,
+       subtitle = paste0(Match_Fixture))  +
+  theme(plot.background = element_rect(colour = "snow", fill = "snow"),
+        panel.background = element_rect(colour = "snow", fill = "snow"),
+        plot.title = element_markdown(),
+        plot.caption = element_markdown(),
+        plot.title.position = "plot",
+        plot.subtitle = element_text(size = 12),
+        axis.title = element_text(colour = "gray12", size = 12),
+        axis.text = element_text(size = 8),
+        axis.text.x = element_text(size = 8, angle = 90),
+        text = element_text(color = "gray12", family = "Arial"),
+        legend.position = "none",
+        panel.grid.major = element_line(colour = "#454545", linewidth = 0.4, linetype = "dashed"),
+        panel.grid.minor = element_blank())
+
+ReceivingLinePlot
+
+```
+#### Threat
+```{r}
+#| title: Attacking Threat
+#| results: asis
+#| label: Home threat graph Season P match
+
+EPVLinePlot <- MatchPLayerSeasonData %>%
+  filter(
+    TeamName == Match_Home,
+    player_shirt <= 38,
+    !playerId %in% c("Harvey Elliott", "Freddie Woodman", "Giovanni Leoni")
+  ) %>%
+  mutate(Game_date = as.Date(Game_date, format = "%d-%m-%Y")
+         ) %>%
+  ggplot(aes(x = Game_date, y = Team_EPV_P, colour = playerId, group = playerId)) +
+  geom_line(linewidth = 1) +
+  scale_y_continuous(
+    breaks = seq(0, 0.6, 0.1),
+    labels = percent_format(accuracy = 1)
+  ) +
+  facet_wrap(~playerId, ncol = 4) +
+  labs(x = "Month", 
+       y = "% Team EPV",
+       title = paste0(Match_Home, "  Player Season Performance"),
+       caption = My_caption,
+       subtitle = paste0(Match_Fixture))  +
+  theme(plot.background = element_rect(colour = "snow", fill = "snow"),
+        panel.background = element_rect(colour = "snow", fill = "snow"),
+        plot.title = element_markdown(),
+        plot.caption = element_markdown(),
+        plot.title.position = "plot",
+        plot.subtitle = element_text(size = 12),
+        axis.title = element_text(colour = "gray12", size = 12),
+        axis.text = element_text(size = 8),
+        axis.text.x = element_text(size = 8, angle = 90),
+        text = element_text(color = "gray12", family = "Arial"),
+        legend.position = "none",
+        panel.grid.major = element_line(colour = "#454545", linewidth = 0.4, linetype = "dashed"),
+        panel.grid.minor = element_blank())
+
+EPVLinePlot
+
+```
+```{r}
+#| title: Defensive EPV
+#| results: asis
+#| label: Home Def threat graph Season P match
+
+EPVDLinePlot <- MatchPLayerSeasonData %>%
+  filter(
+    TeamName == Match_Home,
+    player_shirt <= 38,
+    !playerId %in% c("Harvey Elliott", "Freddie Woodman", "Giovanni Leoni")
+  ) %>%
+  mutate(Game_date = as.Date(Game_date, format = "%d-%m-%Y")
+         ) %>%
+  ggplot(aes(x = Game_date, y = EPV_Won, colour = playerId, group = playerId)) +
+  geom_line(linewidth = 1) +
+  scale_y_continuous(
+    breaks = seq(0, 1, 0.1),
+    labels = percent_format(accuracy = 1)
+  ) +
+  facet_wrap(~playerId, ncol = 4) +
+  labs(x = "Month", 
+       y = "% EPV Defensive Won",
+       title = paste0(Match_Home, "  Player Season Performance"),
+       caption = My_caption,
+       subtitle = paste0(Match_Fixture))  +
+  theme(plot.background = element_rect(colour = "snow", fill = "snow"),
+        panel.background = element_rect(colour = "snow", fill = "snow"),
+        plot.title = element_markdown(),
+        plot.caption = element_markdown(),
+        plot.title.position = "plot",
+        plot.subtitle = element_text(size = 12),
+        axis.title = element_text(colour = "gray12", size = 12),
+        axis.text = element_text(size = 8),
+        axis.text.x = element_text(size = 8, angle = 90),
+        text = element_text(color = "gray12", family = "Arial"),
+        legend.position = "none",
+        panel.grid.major = element_line(colour = "#454545", linewidth = 0.4, linetype = "dashed"),
+        panel.grid.minor = element_blank())
+
+EPVDLinePlot
+
+```
+
+#### xG
+```{r}
+#| title: xG stats
+#| results: asis
+#| label: xG graph Season P match
+
+xGLinePlot <- MatchPLayerSeasonData %>%
+  filter(
+    TeamName == Match_Home,
+    player_shirt <= 38,
+    !playerId %in% c("Harvey Elliott", "Freddie Woodman", "Giovanni Leoni")
+  ) %>%
+  mutate(Game_date = as.Date(Game_date, format = "%d-%m-%Y")
+         ) %>%
+  ggplot(aes(x = Game_date, y = xG, colour = playerId, group = playerId)) +
+  geom_line(linewidth = 1) +
+  #scale_y_continuous(
+  #  breaks = seq(0, 1, 0.1),
+  #  labels = percent_format(accuracy = 1)
+  #) +
+  facet_wrap(~playerId, ncol = 4) +
+  labs(x = "Month", 
+       y = "xG",
+       title = paste0(Match_Home, "  Player Season Performance"),
+       caption = My_caption,
+       subtitle = paste0(Match_Fixture))  +
+  theme(plot.background = element_rect(colour = "snow", fill = "snow"),
+        panel.background = element_rect(colour = "snow", fill = "snow"),
+        plot.title = element_markdown(),
+        plot.caption = element_markdown(),
+        plot.title.position = "plot",
+        plot.subtitle = element_text(size = 12),
+        axis.title = element_text(colour = "gray12", size = 12),
+        axis.text = element_text(size = 8),
+        axis.text.x = element_text(size = 8, angle = 90),
+        text = element_text(color = "gray12", family = "Arial"),
+        legend.position = "none",
+        panel.grid.major = element_line(colour = "#454545", linewidth = 0.4, linetype = "dashed"),
+        panel.grid.minor = element_blank())
+
+xGLinePlot
+
+```
+```{r}
+#| title: xGOT stats
+#| results: asis
+#| label: xGOT graph Season P match
+
+xGOTLinePlot <- MatchPLayerSeasonData %>%
+  filter(
+    TeamName == Match_Home,
+    player_shirt <= 38,
+    !playerId %in% c("Harvey Elliott", "Freddie Woodman", "Giovanni Leoni")
+  ) %>%
+  mutate(Game_date = as.Date(Game_date, format = "%d-%m-%Y")
+         ) %>%
+  ggplot(aes(x = Game_date, y = xGOT, colour = playerId, group = playerId)) +
+  geom_line(linewidth = 1) +
+  #scale_y_continuous(
+  #  breaks = seq(0, 1, 0.1),
+  #  labels = percent_format(accuracy = 1)
+  #) +
+  facet_wrap(~playerId, ncol = 4) +
+  labs(x = "Month", 
+       y = "xGOT",
+       title = paste0(Match_Home, "  Player Season Performance"),
+       caption = My_caption,
+       subtitle = paste0(Match_Fixture))  +
+  theme(plot.background = element_rect(colour = "snow", fill = "snow"),
+        panel.background = element_rect(colour = "snow", fill = "snow"),
+        plot.title = element_markdown(),
+        plot.caption = element_markdown(),
+        plot.title.position = "plot",
+        plot.subtitle = element_text(size = 12),
+        axis.title = element_text(colour = "gray12", size = 12),
+        axis.text = element_text(size = 8),
+        axis.text.x = element_text(size = 8, angle = 90),
+        text = element_text(color = "gray12", family = "Arial"),
+        legend.position = "none",
+        panel.grid.major = element_line(colour = "#454545", linewidth = 0.4, linetype = "dashed"),
+        panel.grid.minor = element_blank())
+
+xGOTLinePlot
+
+```
+
+#### Shooting
+```{r}
+#| title: Shot Accuracy stats
+#| results: asis
+#| label: Shot a graph Season P match
+
+shotALinePlot <- MatchPLayerSeasonData %>%
+  filter(
+    TeamName == Match_Home,
+    player_shirt <= 38,
+    !playerId %in% c("Harvey Elliott", "Freddie Woodman", "Giovanni Leoni")
+  ) %>%
+  mutate(Game_date = as.Date(Game_date, format = "%d-%m-%Y")
+         ) %>%
+  ggplot(aes(x = Game_date, y = `Shot Accuracy`, colour = playerId, group = playerId)) +
+  geom_line(linewidth = 1) +
+  #scale_y_continuous(
+  #  breaks = seq(0, 1, 0.1),
+  #  labels = percent_format(accuracy = 1)
+  #) +
+  facet_wrap(~playerId, ncol = 4) +
+  labs(x = "Month", 
+       y = "Shot Accuracy",
+       title = paste0(Match_Home, "  Player Season Performance"),
+       caption = My_caption,
+       subtitle = paste0(Match_Fixture))  +
+  theme(plot.background = element_rect(colour = "snow", fill = "snow"),
+        panel.background = element_rect(colour = "snow", fill = "snow"),
+        plot.title = element_markdown(),
+        plot.caption = element_markdown(),
+        plot.title.position = "plot",
+        plot.subtitle = element_text(size = 12),
+        axis.title = element_text(colour = "gray12", size = 12),
+        axis.text = element_text(size = 8),
+        axis.text.x = element_text(size = 8, angle = 90),
+        text = element_text(color = "gray12", family = "Arial"),
+        legend.position = "none",
+        panel.grid.major = element_line(colour = "#454545", linewidth = 0.4, linetype = "dashed"),
+        panel.grid.minor = element_blank())
+
+shotALinePlot
+
+```
+```{r}
+#| title: Shot Quality stats
+#| results: asis
+#| label: shot q graph Season P match
+
+shotQLinePlot <- MatchPLayerSeasonData %>%
+  filter(
+    TeamName == Match_Home,
+    player_shirt <= 38,
+    !playerId %in% c("Harvey Elliott", "Freddie Woodman", "Giovanni Leoni")
+  ) %>%
+  mutate(Game_date = as.Date(Game_date, format = "%d-%m-%Y")
+         ) %>%
+  ggplot(aes(x = Game_date, y = `Shot Quality`, colour = playerId, group = playerId)) +
+  geom_line(linewidth = 1) +
+  #scale_y_continuous(
+  #  breaks = seq(0, 5, 0.2),
+  #  labels = percent_format(accuracy = 1)
+  #) +
+  facet_wrap(~playerId, ncol = 4) +
+  labs(x = "Month", 
+       y = "Shot Quality",
+       title = paste0(Match_Home, "  Player Season Performance"),
+       caption = My_caption,
+       subtitle = paste0(Match_Fixture))  +
+  theme(plot.background = element_rect(colour = "snow", fill = "snow"),
+        panel.background = element_rect(colour = "snow", fill = "snow"),
+        plot.title = element_markdown(),
+        plot.caption = element_markdown(),
+        plot.title.position = "plot",
+        plot.subtitle = element_text(size = 12),
+        axis.title = element_text(colour = "gray12", size = 12),
+        axis.text = element_text(size = 8),
+        axis.text.x = element_text(size = 8, angle = 90),
+        text = element_text(color = "gray12", family = "Arial"),
+        legend.position = "none",
+        panel.grid.major = element_line(colour = "#454545", linewidth = 0.4, linetype = "dashed"),
+        panel.grid.minor = element_blank())
+
+shotQLinePlot
+
+```
+
+#### Duels
+```{r}
+#| title: AD stats
+#| results: asis
+#| label: Home AD graph Season P match
+
+ADLinePlot <- MatchPLayerSeasonData %>%
+  filter(
+    TeamName == Match_Home,
+    player_shirt <= 38,
+    !playerId %in% c("Harvey Elliott", "Freddie Woodman", "Giovanni Leoni")
+  ) %>%
+  mutate(Game_date = as.Date(Game_date, format = "%d-%m-%Y")
+         ) %>%
+  ggplot(aes(x = Game_date, y = Aerial_Success, colour = playerId, group = playerId)) +
+  geom_line(linewidth = 1) +
+  scale_y_continuous(
+    breaks = seq(0, 1, 0.1),
+    labels = percent_format(accuracy = 1)
+  ) +
+  facet_wrap(~playerId, ncol = 4) +
+  labs(x = "Month", 
+       y = "% Aerial Duel Success",
+       title = paste0(Match_Home, "  Player Season Performance"),
+       caption = My_caption,
+       subtitle = paste0(Match_Fixture))  +
+  theme(plot.background = element_rect(colour = "snow", fill = "snow"),
+        panel.background = element_rect(colour = "snow", fill = "snow"),
+        plot.title = element_markdown(),
+        plot.caption = element_markdown(),
+        plot.title.position = "plot",
+        plot.subtitle = element_text(size = 12),
+        axis.title = element_text(colour = "gray12", size = 12),
+        axis.text = element_text(size = 8),
+        axis.text.x = element_text(size = 8, angle = 90),
+        text = element_text(color = "gray12", family = "Arial"),
+        legend.position = "none",
+        panel.grid.major = element_line(colour = "#454545", linewidth = 0.4, linetype = "dashed"),
+        panel.grid.minor = element_blank())
+
+ADLinePlot
+
+```
+```{r}
+#| title: DA stats
+#| results: asis
+#| label: Home DA graph Season P match
+
+DALinePlot <- MatchPLayerSeasonData %>%
+  filter(
+    TeamName == Match_Home,
+    player_shirt <= 38,
+    !playerId %in% c("Harvey Elliott", "Freddie Woodman", "Giovanni Leoni")
+  ) %>%
+  mutate(Game_date = as.Date(Game_date, format = "%d-%m-%Y")
+         ) %>%
+  ggplot(aes(x = Game_date, y = Duel_Success, colour = playerId, group = playerId)) +
+  geom_line(linewidth = 1) +
+  scale_y_continuous(
+    breaks = seq(0, 1, 0.1),
+    labels = percent_format(accuracy = 1)
+  ) +
+  facet_wrap(~playerId, ncol = 4) +
+  labs(x = "Month", 
+       y = "% Duel Success",
+       title = paste0(Match_Home, "  Player Season Performance"),
+       caption = My_caption,
+       subtitle = paste0(Match_Fixture))  +
+  theme(plot.background = element_rect(colour = "snow", fill = "snow"),
+        panel.background = element_rect(colour = "snow", fill = "snow"),
+        plot.title = element_markdown(),
+        plot.caption = element_markdown(),
+        plot.title.position = "plot",
+        plot.subtitle = element_text(size = 12),
+        axis.title = element_text(colour = "gray12", size = 12),
+        axis.text = element_text(size = 8),
+        axis.text.x = element_text(size = 8, angle = 90),
+        text = element_text(color = "gray12", family = "Arial"),
+        legend.position = "none",
+        panel.grid.major = element_line(colour = "#454545", linewidth = 0.4, linetype = "dashed"),
+        panel.grid.minor = element_blank())
+
+DALinePlot
+
+```
 # EPL
 
 ```{r}
@@ -3791,6 +4603,8 @@ SeasonSummaryPLayerDefensiveTableHomeP90 <- MatchSummaryPLayerDefensiveSeasonDat
 
 SeasonSummaryPLayerDefensiveTableHomeP90
 ```
+
+
 
 # CL
 

@@ -1,0 +1,4 @@
+- source: Kubo Dashboard.qmd
+  quarto-pub:
+    - id: aab09de8-2104-40cf-9986-c7fc145f5c6e
+      url: 'https://drbarts.quarto.pub/kubo-dashboard'

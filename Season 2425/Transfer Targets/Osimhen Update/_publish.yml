@@ -1,0 +1,4 @@
+- source: Osimhen update Dashboard.qmd
+  quarto-pub:
+    - id: 29ea8fdd-dd66-4642-aaa0-be630205e3f4
+      url: 'https://drbarts.quarto.pub/osimhen-update-dashboard'

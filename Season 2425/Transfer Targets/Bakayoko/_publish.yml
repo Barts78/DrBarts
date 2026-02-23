@@ -1,0 +1,4 @@
+- source: Bakayoko Dashboard.qmd
+  quarto-pub:
+    - id: e1ce7f58-6731-4c16-8925-ec77364ed748
+      url: 'https://drbarts.quarto.pub/bakayoko-dashboard'

@@ -1,0 +1,4 @@
+- source: Bouaddi Dashboard.qmd
+  quarto-pub:
+    - id: b2a62a92-febc-4733-9a5c-cd12897afb38
+      url: https://drbarts.quarto.pub/bouaddi-dashboard-2526

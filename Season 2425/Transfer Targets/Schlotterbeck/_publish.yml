@@ -1,0 +1,4 @@
+- source: Schlotterbeck Dashboard.qmd
+  quarto-pub:
+    - id: 38efde79-c89f-48f7-bd8a-c687ab3783b5
+      url: 'https://drbarts.quarto.pub/schlotterbeck-dashboard'

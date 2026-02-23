@@ -1,0 +1,8 @@
+- source: Air Nouri Dashboard.qmd
+  quarto-pub:
+    - id: 1dcf9d19-469e-45d4-9ae2-2e77df881321
+      url: 'https://drbarts.quarto.pub/air-nouri-dashboard'
+- source: Kerkez Dashboard.qmd
+  quarto-pub:
+    - id: 2aeab763-0a14-4eb4-89cb-f7870461ce0f
+      url: 'https://drbarts.quarto.pub/kerkez-dashboard'

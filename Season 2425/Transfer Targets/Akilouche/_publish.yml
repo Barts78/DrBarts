@@ -1,0 +1,4 @@
+- source: Akilouche Dashboard.qmd
+  quarto-pub:
+    - id: ae29f3e5-8e0f-4b62-b4b4-2f1078f70a4b
+      url: 'https://drbarts.quarto.pub/akilouche-dashboard-5439'

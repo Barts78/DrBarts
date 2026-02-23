@@ -1,0 +1,4 @@
+- source: Zeno Debast Dashboard.qmd
+  quarto-pub:
+    - id: 5e90f1e2-2b4a-496d-9e9a-215a59058012
+      url: https://drbarts.quarto.pub/zeno-debast-dashboard-2526

@@ -1,0 +1,4 @@
+- source: Delap Dashboard.qmd
+  quarto-pub:
+    - id: c315833a-1899-4a7c-aa59-5a8406a369a5
+      url: 'https://drbarts.quarto.pub/delap-dashboard'

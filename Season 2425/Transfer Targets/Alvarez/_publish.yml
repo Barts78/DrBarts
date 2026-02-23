@@ -1,0 +1,4 @@
+- source: Alvarez Dashboard.qmd
+  quarto-pub:
+    - id: ca351a8b-f7b9-4cc6-9ac5-7e85154658f8
+      url: 'https://drbarts.quarto.pub/alvarez-dashboard'

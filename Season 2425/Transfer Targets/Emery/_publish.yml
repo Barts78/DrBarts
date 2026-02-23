@@ -1,0 +1,4 @@
+- source: Zaire-Emery Dashboard.qmd
+  quarto-pub:
+    - id: 3989bdca-12c8-4fa6-b5bb-3fb216786f5e
+      url: 'https://drbarts.quarto.pub/zaire-emery-dashboard'

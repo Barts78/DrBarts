@@ -1,0 +1,4 @@
+- source: Kamara Dashboard.qmd
+  quarto-pub:
+    - id: e32a61ab-b322-426b-a440-f2b392fb22d6
+      url: 'https://drbarts.quarto.pub/kamara-dashboard'

@@ -1,0 +1,4 @@
+- source: Osimhen Dashboard.qmd
+  quarto-pub:
+    - id: bb1166e4-f8e0-4ff7-adb9-e85f35da6f5d
+      url: 'https://drbarts.quarto.pub/osimhen-dashboard'

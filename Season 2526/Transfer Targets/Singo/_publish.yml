@@ -1,0 +1,4 @@
+- source: Singo Dashboard.qmd
+  quarto-pub:
+    - id: 22e48224-0b99-4310-8211-09ae454985bc
+      url: https://drbarts.quarto.pub/singo-dashboard-2526-a7de

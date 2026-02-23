@@ -1,0 +1,4 @@
+- source: Wirtz Dashboard.qmd
+  quarto-pub:
+    - id: 2f567659-a44d-40fe-8729-4ab821883d93
+      url: 'https://drbarts.quarto.pub/wirtz-dashboard'

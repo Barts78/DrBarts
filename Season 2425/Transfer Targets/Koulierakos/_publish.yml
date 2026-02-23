@@ -1,0 +1,4 @@
+- source: Koulierakos Dashboard.qmd
+  quarto-pub:
+    - id: d2f47cfd-b4bb-4c09-b789-d8e6e04efdac
+      url: 'https://drbarts.quarto.pub/koulierakos-dashboard'

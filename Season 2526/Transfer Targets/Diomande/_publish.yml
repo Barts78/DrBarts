@@ -1,0 +1,8 @@
+- source: Upamecano Dashboard.qmd
+  quarto-pub:
+    - id: 7a6d72fb-2fc9-4bc1-8209-f6c80bb604ae
+      url: https://drbarts.quarto.pub/upamecano-dashboard-2526
+- source: Diomande Dashboard.qmd
+  quarto-pub:
+    - id: 50e8b8b4-1411-4cb3-8343-26aa13e9494a
+      url: https://drbarts.quarto.pub/yan-diomande-dashboard-2526

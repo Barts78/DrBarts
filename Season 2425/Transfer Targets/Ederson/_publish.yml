@@ -1,0 +1,4 @@
+- source: Ederson Dashboard.qmd
+  quarto-pub:
+    - id: c636f518-7e15-4897-8098-3b4129c45796
+      url: 'https://drbarts.quarto.pub/ederson-dashboard'

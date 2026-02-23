@@ -1,0 +1,4 @@
+- source: Fofana Dashboard.qmd
+  quarto-pub:
+    - id: f7dc8a9b-ac7f-41e8-b0c8-f9779b259466
+      url: 'https://drbarts.quarto.pub/fofana-dashboard'

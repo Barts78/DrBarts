@@ -1,0 +1,4 @@
+- source: Ratiju Dashboard.qmd
+  quarto-pub:
+    - id: 42f33365-db21-4fd6-a2a9-ecd8ee722d1d
+      url: 'https://drbarts.quarto.pub/ratiju-dashboard'

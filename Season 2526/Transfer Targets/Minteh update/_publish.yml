@@ -1,0 +1,4 @@
+- source: Minteh update Dashboard.qmd
+  quarto-pub:
+    - id: 3c5ebe52-05ba-46c2-b2fc-b3b7b5ea7c26
+      url: https://drbarts.quarto.pub/minteh-update-dashboard

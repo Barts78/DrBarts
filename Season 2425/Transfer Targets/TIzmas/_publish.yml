@@ -1,0 +1,4 @@
+- source: Tizmas Dashboard.qmd
+  quarto-pub:
+    - id: 0968e92e-8c78-49b9-bfe8-dbe5866fad9d
+      url: 'https://drbarts.quarto.pub/tizmas-dashboard'

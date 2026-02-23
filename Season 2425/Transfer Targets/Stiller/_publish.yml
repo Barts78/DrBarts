@@ -1,0 +1,4 @@
+- source: Stiller Dashboard.qmd
+  quarto-pub:
+    - id: f46e5c55-f65f-4b4b-ad83-df61dfe190e2
+      url: 'https://drbarts.quarto.pub/stiller-dashboard'

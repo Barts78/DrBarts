@@ -1,0 +1,4 @@
+- source: Colwill Dashboard.qmd
+  quarto-pub:
+    - id: e114d381-9fc6-442c-8cc3-8abddb2d861b
+      url: 'https://drbarts.quarto.pub/colwill-dashboard'

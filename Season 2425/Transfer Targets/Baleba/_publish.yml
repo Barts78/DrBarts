@@ -1,0 +1,4 @@
+- source: Baleba Dashboard.qmd
+  quarto-pub:
+    - id: 7226b48a-991d-4739-9699-bc395e7797c3
+      url: 'https://drbarts.quarto.pub/baleba-dashboard'

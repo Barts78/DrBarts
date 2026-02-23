@@ -1,0 +1,4 @@
+- source: Gordon update Dashboard.qmd
+  quarto-pub:
+    - id: ba59f9c5-e430-4656-bf89-ee8c7cc37d6b
+      url: 'https://drbarts.quarto.pub/gordon-update-dashboard'

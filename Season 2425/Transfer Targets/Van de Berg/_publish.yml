@@ -1,0 +1,4 @@
+- source: Sepp Dashboard.qmd
+  quarto-pub:
+    - id: ca8fa516-564a-429f-9b6f-25e429fbaf1c
+      url: 'https://drbarts.quarto.pub/sepp-dashboard-c44b'

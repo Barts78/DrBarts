@@ -1,0 +1,4 @@
+- source: Gutierriz Dashboard.qmd
+  quarto-pub:
+    - id: 22047d8d-fa4c-4cd9-9d7a-381773d03b40
+      url: 'https://drbarts.quarto.pub/gutierrez-dashboard'

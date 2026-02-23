@@ -1,0 +1,4 @@
+- source: Dibling Dashboard.qmd
+  quarto-pub:
+    - id: a9b52883-dbcc-4b08-8063-2f4b93607977
+      url: 'https://drbarts.quarto.pub/dibling-dashboard'

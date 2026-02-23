@@ -1,0 +1,4 @@
+- source: Wharton Dashboard.qmd
+  quarto-pub:
+    - id: 6403181d-48dd-46aa-a600-00926dab8465
+      url: 'https://drbarts.quarto.pub/wharton-dashboard'

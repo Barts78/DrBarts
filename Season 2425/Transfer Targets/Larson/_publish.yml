@@ -1,0 +1,4 @@
+- source: Larson Dashboard.qmd
+  quarto-pub:
+    - id: 4f6cc413-6eda-49a1-88ec-874ee4a657dd
+      url: 'https://drbarts.quarto.pub/larsson-dashboard'

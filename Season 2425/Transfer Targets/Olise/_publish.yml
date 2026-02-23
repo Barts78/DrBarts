@@ -1,0 +1,4 @@
+- source: Olise Dashboard.qmd
+  quarto-pub:
+    - id: 71a73c3d-a356-4e54-a3f7-6b7dd34812f2
+      url: https://drbarts.quarto.pub/olise-dashboard

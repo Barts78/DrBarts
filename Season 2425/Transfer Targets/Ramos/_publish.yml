@@ -1,0 +1,4 @@
+- source: Ramos Dashboard.qmd
+  quarto-pub:
+    - id: 7cefba1d-1daa-46f0-b1db-c311a04e4ac0
+      url: 'https://drbarts.quarto.pub/ramos-dashboard'

@@ -1,0 +1,4 @@
+- source: Hato Dashboard.qmd
+  quarto-pub:
+    - id: 6600bdcf-1742-44aa-b479-8abb6bcc82ac
+      url: 'https://drbarts.quarto.pub/hato-dashboard'

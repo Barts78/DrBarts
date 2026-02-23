@@ -1,0 +1,4 @@
+- source: Leoni Dashboard.qmd
+  quarto-pub:
+    - id: 097d5020-6792-43ed-b764-56318278ee92
+      url: 'https://drbarts.quarto.pub/leoni-dashboard'

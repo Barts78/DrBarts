@@ -1,0 +1,4 @@
+- source: Diomande Dashboard.qmd
+  quarto-pub:
+    - id: 7efd244f-d594-4d22-b326-9f70ea3618b2
+      url: 'https://drbarts.quarto.pub/diomande-dashboard'

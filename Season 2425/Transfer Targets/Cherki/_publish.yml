@@ -1,0 +1,4 @@
+- source: Cherki Dashboard.qmd
+  quarto-pub:
+    - id: 966785ce-b037-4b00-8025-9fd44d50809c
+      url: 'https://drbarts.quarto.pub/cherki-dashboard'

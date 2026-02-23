@@ -1,0 +1,4 @@
+- source: Yoro Dashboard.qmd
+  quarto-pub:
+    - id: ada8b79b-4761-4e9c-b098-8addf8b9bfa2
+      url: 'https://drbarts.quarto.pub/yoro-dashboard'

@@ -1,0 +1,8 @@
+- source: Air Nouri Dashboard.qmd
+  quarto-pub:
+    - id: 1dcf9d19-469e-45d4-9ae2-2e77df881321
+      url: 'https://drbarts.quarto.pub/air-nouri-dashboard'
+- source: Air Nouri update Dashboard.qmd
+  quarto-pub:
+    - id: dc271c66-1f5f-4973-a071-d4409de84a2d
+      url: 'https://drbarts.quarto.pub/air-nouri-update-dashboard-89e6'

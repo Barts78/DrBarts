@@ -1,0 +1,4 @@
+- source: Pedro Dashboard.qmd
+  quarto-pub:
+    - id: ad59df7c-dc93-48fa-b444-cf3f191a5edb
+      url: 'https://drbarts.quarto.pub/pedro-dashboard'

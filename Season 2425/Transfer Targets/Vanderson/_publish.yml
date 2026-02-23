@@ -1,0 +1,4 @@
+- source: Vanderson Dashboard.qmd
+  quarto-pub:
+    - id: e29d0ac6-3835-49b6-8218-f7db65890cae
+      url: 'https://drbarts.quarto.pub/vanderson-dashboard-1c04'

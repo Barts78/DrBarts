@@ -1,0 +1,4 @@
+- source: Doak Dashboard.qmd
+  quarto-pub:
+    - id: 1ab80750-67c2-4de7-86d3-9c7c5028644e
+      url: 'https://drbarts.quarto.pub/doak-dashboard-06a4'

@@ -1,0 +1,4 @@
+- source: Carreras Dashboard.qmd
+  quarto-pub:
+    - id: 685062f4-439b-4c95-a8eb-1c4d0a31c5b7
+      url: 'https://drbarts.quarto.pub/carreras-dashboard'

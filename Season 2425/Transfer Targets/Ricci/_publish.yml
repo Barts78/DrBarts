@@ -1,0 +1,4 @@
+- source: Ricci Dashboard.qmd
+  quarto-pub:
+    - id: b336c5e0-0f2b-4c87-bd41-dd9a66136cf8
+      url: 'https://drbarts.quarto.pub/ricci-dashboard'

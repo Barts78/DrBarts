@@ -1,0 +1,4 @@
+- source: Diaz Dashboard.qmd
+  quarto-pub:
+    - id: 27955a4f-d9ab-4801-acb8-5781aa411b15
+      url: 'https://drbarts.quarto.pub/diaz-dashboard'

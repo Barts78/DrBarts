@@ -1,0 +1,6 @@
+- source: Hincapie Dashboard.qmd
+  quarto-pub:
+    - id: ec6d395e-64da-4e97-b44e-e97feacaee25
+      url: 'https://drbarts.quarto.pub/hincapié-dashboard'
+    - id: 731a5f46-4216-40a9-82de-a6343b07cd62
+      url: 'https://drbarts.quarto.pub/hincapie-dashboard'

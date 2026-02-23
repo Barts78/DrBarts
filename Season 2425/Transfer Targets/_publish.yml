@@ -1,0 +1,4 @@
+- source: Transfers Dashboard.qmd
+  quarto-pub:
+    - id: 0de7d427-c112-4527-8560-d2e2453525c3
+      url: 'https://drbarts.quarto.pub/kudus-vs-liverpool'

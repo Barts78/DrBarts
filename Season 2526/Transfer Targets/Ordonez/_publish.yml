@@ -1,0 +1,4 @@
+- source: Ordonez Dashboard.qmd
+  quarto-pub:
+    - id: 70707531-fc2e-4d5f-a8f9-f3ede50a6b43
+      url: https://drbarts.quarto.pub/ordonez-dashboard-2526

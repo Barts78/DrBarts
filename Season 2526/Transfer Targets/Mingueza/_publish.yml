@@ -1,0 +1,8 @@
+- source: Bastoni Dashboard.qmd
+  quarto-pub:
+    - id: d8ff8102-5d9c-4a31-ae8f-5c62aa768538
+      url: https://drbarts.quarto.pub/bastoni-dashboard-2526
+- source: Mingueza Dashboard.qmd
+  quarto-pub:
+    - id: cb1710bf-a0d9-496b-aeb6-91df1d93694a
+      url: https://drbarts.quarto.pub/mingueza-dashboard-2526

@@ -1,0 +1,4 @@
+- source: Gyokeres Dashboard.qmd
+  quarto-pub:
+    - id: d0a37b1a-8971-4f10-b15d-c181799f884f
+      url: 'https://drbarts.quarto.pub/gyokeres-dashboard'

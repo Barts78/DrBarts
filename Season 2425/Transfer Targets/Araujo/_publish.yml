@@ -1,0 +1,4 @@
+- source: Araujo Dashboard.qmd
+  quarto-pub:
+    - id: edcf07d3-fa86-456c-b39e-678911875984
+      url: 'https://drbarts.quarto.pub/araujo-dashboard'

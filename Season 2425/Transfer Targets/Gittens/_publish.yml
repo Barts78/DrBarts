@@ -1,0 +1,4 @@
+- source: Gittens Dashboard.qmd
+  quarto-pub:
+    - id: ecb85204-67fb-4922-8c78-c39d388cb122
+      url: 'https://drbarts.quarto.pub/gittens-dashboard'

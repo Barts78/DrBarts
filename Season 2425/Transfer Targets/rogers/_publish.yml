@@ -1,0 +1,4 @@
+- source: Rogers Dashboard.qmd
+  quarto-pub:
+    - id: 044b5e73-ce03-49da-81fb-2eb37d1a8350
+      url: https://drbarts.quarto.pub/rogers-update-dashboard

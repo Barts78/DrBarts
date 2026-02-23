@@ -1,0 +1,4 @@
+- source: Bastoni Dashboard.qmd
+  quarto-pub:
+    - id: d8ff8102-5d9c-4a31-ae8f-5c62aa768538
+      url: https://drbarts.quarto.pub/bastoni-dashboard-2526

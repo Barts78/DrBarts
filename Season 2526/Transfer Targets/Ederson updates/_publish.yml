@@ -1,0 +1,4 @@
+- source: Ederson update Dashboard.qmd
+  quarto-pub:
+    - id: fab86675-72ad-4d0a-90ee-9160c4b084b4
+      url: https://drbarts.quarto.pub/ederson-update-dashboard-2526

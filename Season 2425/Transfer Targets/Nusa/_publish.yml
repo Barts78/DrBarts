@@ -1,0 +1,4 @@
+- source: Nusa Dashboard.qmd
+  quarto-pub:
+    - id: 6d2b9d61-c637-42fb-9719-3695cc3ce230
+      url: 'https://drbarts.quarto.pub/nusa-update-dashboard'

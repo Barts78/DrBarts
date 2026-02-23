@@ -1,0 +1,4 @@
+- source: Guehi Dashboard.qmd
+  quarto-pub:
+    - id: 8773fb3f-258c-4ded-b181-e36b252607d9
+      url: 'https://drbarts.quarto.pub/marc-guehi-dashboard'

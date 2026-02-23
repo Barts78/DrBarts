@@ -1,0 +1,4 @@
+- source: Rovella Dashboard.qmd
+  quarto-pub:
+    - id: ba5dc912-c573-472d-a7f8-db09547c2375
+      url: 'https://drbarts.quarto.pub/rovella-dashboard'

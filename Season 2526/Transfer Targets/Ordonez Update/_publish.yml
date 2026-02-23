@@ -1,0 +1,12 @@
+- source: Semenyo update Dashboard.qmd
+  quarto-pub:
+    - id: 3a9a0cfc-ca8d-4264-8a63-76b21eac3a65
+      url: https://drbarts.quarto.pub/semenyo-update-dashboard
+- source: Semenyo update Dashboard 2526.qmd
+  quarto-pub:
+    - id: 9fab37f9-0584-4c27-a7ef-801d0e976748
+      url: https://drbarts.quarto.pub/semenyo-update-2526-dashboard
+- source: Ordonez Update Dashboard 2526.qmd
+  quarto-pub:
+    - id: 0ed05a9c-56a2-47d4-ab77-7ea92c2cec1a
+      url: https://drbarts.quarto.pub/ordonez-update-2526-dashboard

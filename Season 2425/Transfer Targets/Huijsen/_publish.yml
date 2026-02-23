@@ -1,0 +1,4 @@
+- source: Huijsen Dashboard.qmd
+  quarto-pub:
+    - id: b921c953-430e-4748-8a24-85becd33b317
+      url: 'https://drbarts.quarto.pub/huijsen-dashboard'

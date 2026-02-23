@@ -1,0 +1,4 @@
+- source: Jacquet Update Dashboard.qmd
+  quarto-pub:
+    - id: 47962ef1-a263-43d1-9584-7f2f51cb9544
+      url: https://drbarts.quarto.pub/jacquet-update-dashboard-2526

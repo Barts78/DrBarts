@@ -1,0 +1,4 @@
+- source: Gordon Dashboard.qmd
+  quarto-pub:
+    - id: 5454652f-16a7-46df-a279-de1be2b2d184
+      url: 'https://drbarts.quarto.pub/gordon-dashboard'

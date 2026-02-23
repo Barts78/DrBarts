@@ -1,0 +1,4 @@
+- source: Khanoussas Dashboard.qmd
+  quarto-pub:
+    - id: e33348c8-b88e-4da2-9249-350cb9857422
+      url: 'https://drbarts.quarto.pub/khannouss-dashboard'

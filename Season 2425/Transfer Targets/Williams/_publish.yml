@@ -1,0 +1,4 @@
+- source: Williams Dashboard.qmd
+  quarto-pub:
+    - id: 4302ffea-4c25-44ca-8a02-937ef1332c72
+      url: 'https://drbarts.quarto.pub/williams-dashboard'

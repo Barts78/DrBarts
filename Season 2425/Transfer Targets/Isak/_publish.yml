@@ -1,0 +1,4 @@
+- source: Isak Dashboard.qmd
+  quarto-pub:
+    - id: 5bca80cb-c6a5-43df-a6b3-b7f87350917a
+      url: 'https://drbarts.quarto.pub/isak-dashboard'

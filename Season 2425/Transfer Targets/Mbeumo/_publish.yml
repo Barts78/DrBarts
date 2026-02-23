@@ -1,0 +1,4 @@
+- source: Mbeumo Dashboard.qmd
+  quarto-pub:
+    - id: f8385b40-04e9-40cf-9253-3b07dd67dcbd
+      url: 'https://drbarts.quarto.pub/mbeumo-dashboard'

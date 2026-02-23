@@ -1,0 +1,8 @@
+- source: Zubimendi Dashboard.qmd
+  quarto-pub:
+    - id: 66ee2087-e2a0-4543-9c4e-dc8c937ebcb5
+      url: 'https://drbarts.quarto.pub/zubimendi-dashboard-211b'
+- source: Zubimendi Update Dashboard.qmd
+  quarto-pub:
+    - id: 7a2c08c0-c896-4d3d-a0f9-355bed3b703e
+      url: 'https://drbarts.quarto.pub/zubimendi-update-dashboard'

@@ -1,0 +1,4 @@
+- source: Rodrygo Dashboard.qmd
+  quarto-pub:
+    - id: 5955ce87-30e4-4b3e-b9d8-58f04f54c2a7
+      url: 'https://drbarts.quarto.pub/rodrygo-dashboard'

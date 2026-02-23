@@ -1,0 +1,4 @@
+- source: Van Hecke Dashboard.qmd
+  quarto-pub:
+    - id: 0375998d-b80b-4066-af3b-7a90edba7920
+      url: 'https://drbarts.quarto.pub/van-hecke-dashboard'

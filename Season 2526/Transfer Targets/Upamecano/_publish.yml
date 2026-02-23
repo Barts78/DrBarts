@@ -1,0 +1,4 @@
+- source: Upamecano Dashboard.qmd
+  quarto-pub:
+    - id: 7a6d72fb-2fc9-4bc1-8209-f6c80bb604ae
+      url: https://drbarts.quarto.pub/upamecano-dashboard-2526

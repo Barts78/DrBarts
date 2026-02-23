@@ -1,0 +1,4 @@
+- source: Simonds Dashboard.qmd
+  quarto-pub:
+    - id: 3fc35028-631a-4571-977b-7cecaa7f5879
+      url: 'https://drbarts.quarto.pub/simonds-dashboard'

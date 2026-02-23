@@ -1,0 +1,4 @@
+- source: Guehi update Dashboard.qmd
+  quarto-pub:
+    - id: a7facfc6-0a4f-465a-9681-0417146e3d70
+      url: 'https://drbarts.quarto.pub/guehi-update-dashboard'

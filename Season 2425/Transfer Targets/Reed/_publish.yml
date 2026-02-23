@@ -1,0 +1,4 @@
+- source: Reed Dashboard.qmd
+  quarto-pub:
+    - id: 823267f9-0dfa-457e-bbaa-32aeb74ad2b5
+      url: 'https://drbarts.quarto.pub/read-dashboard'

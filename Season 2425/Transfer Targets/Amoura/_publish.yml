@@ -1,0 +1,4 @@
+- source: Amoura Dashboard.qmd
+  quarto-pub:
+    - id: 4ebb3f81-6750-4c0a-a886-3df05451d3cd
+      url: 'https://drbarts.quarto.pub/amoura-dashboard'

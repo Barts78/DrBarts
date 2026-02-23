@@ -1,0 +1,4 @@
+- source: Timber Dashboard.qmd
+  quarto-pub:
+    - id: f0635042-e671-4204-98f2-01678337d0d2
+      url: 'https://drbarts.quarto.pub/timber-dashboard'

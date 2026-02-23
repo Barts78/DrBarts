@@ -1,0 +1,4 @@
+- source: Marmoush Dashboard.qmd
+  quarto-pub:
+    - id: f010c484-a6a8-4a57-93b0-6adcd86e9526
+      url: 'https://drbarts.quarto.pub/marmoush-dashboard'

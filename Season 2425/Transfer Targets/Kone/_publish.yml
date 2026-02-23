@@ -1,0 +1,4 @@
+- source: Kone Dashboard.qmd
+  quarto-pub:
+    - id: f445c92e-f565-4f04-810d-969533b976fb
+      url: 'https://drbarts.quarto.pub/kone-dashboard'

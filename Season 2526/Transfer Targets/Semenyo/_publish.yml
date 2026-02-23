@@ -1,0 +1,4 @@
+- source: Semenyo update Dashboard.qmd
+  quarto-pub:
+    - id: 3a9a0cfc-ca8d-4264-8a63-76b21eac3a65
+      url: https://drbarts.quarto.pub/semenyo-update-dashboard

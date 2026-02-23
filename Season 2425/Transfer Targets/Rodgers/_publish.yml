@@ -1,0 +1,4 @@
+- source: Rodgers Dashboard.qmd
+  quarto-pub:
+    - id: 00125b75-9368-4aa7-9ed3-f8e859732f1d
+      url: 'https://drbarts.quarto.pub/rodgers-dashboard-06b7'

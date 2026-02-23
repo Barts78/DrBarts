@@ -1,0 +1,4 @@
+- source: Lopez Dashboard.qmd
+  quarto-pub:
+    - id: 8d02f0f3-a09e-4e57-9071-c9333c2a0c7a
+      url: 'https://drbarts.quarto.pub/lopez-dashboard'

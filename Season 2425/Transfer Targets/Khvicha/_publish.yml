@@ -1,0 +1,4 @@
+- source: Khvicha dashboard.qmd
+  quarto-pub:
+    - id: 9cb0b224-84bf-416f-b74e-62f431936698
+      url: 'https://drbarts.quarto.pub/khvicha-dashboard'

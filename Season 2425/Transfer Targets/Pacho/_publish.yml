@@ -1,0 +1,4 @@
+- source: Pacho Dashboard.qmd
+  quarto-pub:
+    - id: 256d14e5-62f1-4aea-a308-4c4e396ea989
+      url: 'https://drbarts.quarto.pub/pacho-dashboard'

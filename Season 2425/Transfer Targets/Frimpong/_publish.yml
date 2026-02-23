@@ -1,0 +1,4 @@
+- source: Frimpong Dashboard.qmd
+  quarto-pub:
+    - id: d7dad5a9-dee6-4eab-a21a-165860884586
+      url: 'https://drbarts.quarto.pub/frimpong-dashboard'

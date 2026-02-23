@@ -1,0 +1,4 @@
+- source: Cunha Dashboard.qmd
+  quarto-pub:
+    - id: a8b55a6f-afe2-4cf7-b623-a6292bac0874
+      url: 'https://drbarts.quarto.pub/cunha-dashboard-85ca'

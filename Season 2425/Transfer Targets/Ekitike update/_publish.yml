@@ -1,0 +1,4 @@
+- source: Ekitike update Dashboard.qmd
+  quarto-pub:
+    - id: f214778e-0fbd-4386-835b-1e8f09740e44
+      url: 'https://drbarts.quarto.pub/ekitike-update-dashboard'

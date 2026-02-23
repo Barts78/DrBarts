@@ -1,0 +1,4 @@
+- source: Lukeba update Dashboard.qmd
+  quarto-pub:
+    - id: b3492f3d-4e4a-44fd-96a7-5b4b41c8f82e
+      url: 'https://drbarts.quarto.pub/lukeba-update-dashboard'

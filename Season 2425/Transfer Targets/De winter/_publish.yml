@@ -1,0 +1,4 @@
+- source: De winter Dashboard.qmd
+  quarto-pub:
+    - id: e86cdf19-08d2-42d8-8b62-f6ec6c9874d9
+      url: 'https://drbarts.quarto.pub/de-winter-dashboard'

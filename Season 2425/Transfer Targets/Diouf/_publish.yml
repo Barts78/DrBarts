@@ -1,0 +1,4 @@
+- source: Diouf dashboard.qmd
+  quarto-pub:
+    - id: 493c1976-d7e9-481e-b9d6-c3f6a5c78104
+      url: 'https://drbarts.quarto.pub/diouf-dashboard'

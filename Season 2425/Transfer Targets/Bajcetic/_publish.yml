@@ -1,0 +1,4 @@
+- source: Bajcetic Dashboard.qmd
+  quarto-pub:
+    - id: 9a7f0592-f7de-4839-8380-2e3adba02c3d
+      url: 'https://drbarts.quarto.pub/bajcetic-dashboard'

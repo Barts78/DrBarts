@@ -1,0 +1,4 @@
+- source: Varela Dashboard.qmd
+  quarto-pub:
+    - id: fb6cb202-7bfa-4f5b-8f28-3a98ce0a8ecb
+      url: 'https://drbarts.quarto.pub/varela-dashboard'

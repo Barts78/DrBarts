@@ -1,0 +1,4 @@
+- source: Sesko Dashboard.qmd
+  quarto-pub:
+    - id: ad2d2d80-e6a7-471b-843a-d56da88d9252
+      url: 'https://drbarts.quarto.pub/sesko-dashboard'

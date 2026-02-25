@@ -3485,7 +3485,7 @@ EPV_PassesFT <- PassConnectionsEPV %>%
   
   #formatting
   labs(title = paste("Midfielders Successful Passes with threat higher than 0.2 EPV"), 
-       subtitle = paste0("Increased Blue = Higher Threat (EPV)"),
+       subtitle = paste0("Increased Red = Higher Threat (EPV)"),
        caption =  My_caption) +
   theme(plot.background = element_rect(colour = "snow", fill = "snow"),
         plot.caption = element_markdown(),
@@ -3538,7 +3538,7 @@ EPV_PassesFT <- PassConnectionsPP %>%
   
   #formatting
   labs(title = paste("Midfielders Successful Progressive Passes with threat higher than 0.2 EPV"), 
-       subtitle = paste0("Increased Blue = Higher Threat (EPV)"),
+       subtitle = paste0("Increased Red = Higher Threat (EPV)"),
        caption =  My_caption) +
   theme(plot.background = element_rect(colour = "snow", fill = "snow"),
         plot.caption = element_markdown(),
@@ -3592,7 +3592,7 @@ EPV_PassesFT <- PassConnectionsKP %>%
   
   #formatting
   labs(title = paste("Midfielders Successful Key Passes with threat higher than 0.2 EPV"), 
-       subtitle = paste0("Increased Blue = Higher Threat (EPV)"),
+       subtitle = paste0("Increased Red = Higher Threat (EPV)"),
        caption =  My_caption) +
   theme(plot.background = element_rect(colour = "snow", fill = "snow"),
         plot.caption = element_markdown(),
@@ -6293,7 +6293,7 @@ EPV_PassesFT <- PassConnectionsEPV %>%
   
   #formatting
   labs(title = paste("Midfielders Successful Passes with threat higher than 0.2 EPV"), 
-       subtitle = paste0("Increased Blue = Higher Threat (EPV)"),
+       subtitle = paste0("Increased Red = Higher Threat (EPV)"),
        caption =  My_caption) +
   theme(plot.background = element_rect(colour = "snow", fill = "snow"),
         plot.caption = element_markdown(),
@@ -6346,7 +6346,7 @@ EPV_PassesFT <- PassConnectionsPP %>%
   
   #formatting
   labs(title = paste("Midfielders Successful Progressive Passes with threat higher than 0.2 EPV"), 
-       subtitle = paste0("Increased Blue = Higher Threat (EPV)"),
+       subtitle = paste0("Increased Red = Higher Threat (EPV)"),
        caption =  My_caption) +
   theme(plot.background = element_rect(colour = "snow", fill = "snow"),
         plot.caption = element_markdown(),
@@ -6400,7 +6400,7 @@ EPV_PassesFT <- PassConnectionsKP %>%
   
   #formatting
   labs(title = paste("Midfielders Successful Key Passes with threat higher than 0.2 EPV"), 
-       subtitle = paste0("Increased Blue = Higher Threat (EPV)"),
+       subtitle = paste0("Increased Red = Higher Threat (EPV)"),
        caption =  My_caption) +
   theme(plot.background = element_rect(colour = "snow", fill = "snow"),
         plot.caption = element_markdown(),
@@ -9102,7 +9102,7 @@ EPV_PassesFT <- PassConnectionsEPV %>%
   
   #formatting
   labs(title = paste("Midfielders Successful Passes with threat higher than 0.2 EPV"), 
-       subtitle = paste0("Increased Blue = Higher Threat (EPV)"),
+       subtitle = paste0("Increased Red = Higher Threat (EPV)"),
        caption =  My_caption) +
   theme(plot.background = element_rect(colour = "snow", fill = "snow"),
         plot.caption = element_markdown(),
@@ -9155,7 +9155,7 @@ EPV_PassesFT <- PassConnectionsPP %>%
   
   #formatting
   labs(title = paste("Midfielders Successful Progressive Passes with threat higher than 0.2 EPV"), 
-       subtitle = paste0("Increased Blue = Higher Threat (EPV)"),
+       subtitle = paste0("Increased Red = Higher Threat (EPV)"),
        caption =  My_caption) +
   theme(plot.background = element_rect(colour = "snow", fill = "snow"),
         plot.caption = element_markdown(),
@@ -9209,7 +9209,7 @@ EPV_PassesFT <- PassConnectionsKP %>%
   
   #formatting
   labs(title = paste("Midfielders Successful Key Passes with threat higher than 0.2 EPV"), 
-       subtitle = paste0("Increased Blue = Higher Threat (EPV)"),
+       subtitle = paste0("Increased Red = Higher Threat (EPV)"),
        caption =  My_caption) +
   theme(plot.background = element_rect(colour = "snow", fill = "snow"),
         plot.caption = element_markdown(),

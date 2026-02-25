@@ -3401,6 +3401,214 @@ Player_Summary_Plot_HomeFG <- Player_Goal_data_Home %>%
 Player_Summary_Plot_HomeFG
 
 ```
+### Passing Profiles {.tabset}
+```{r}
+#| output: false
+#| echo: false
+#| message: false
+#| warning: false
+#| label: player passing profiles setup
+
+PassConnections <- SeasonData 
+PassConnections <- shift_column(data = PassConnections, columns = "playerId", new_names = "receiver", len = 1, up = TRUE)
+PassConnections <- shift_column(data = PassConnections, columns = "TeamName", new_names = "receiver_team", len = 1, up = TRUE)
+PassConnections <- shift_column(data = PassConnections, columns = "x", new_names = "Endx", len = 1, up = TRUE)
+PassConnections <- shift_column(data = PassConnections, columns = "y", new_names = "Endy", len = 1, up = TRUE)
+
+# number of passess between players
+PassConnections <- PassConnections %>%
+  filter(type == "Pass",
+         TeamName == "Liverpool",
+         receiver_team == "Liverpool") %>% 
+  select(Passer = playerId, Receiver = receiver, Passer_Team = teamId, Receiver_Team = receiver_team, Successful_Passes, BCs, Key_Passes, Prog_Passes, EPV = EPVvalue, x, y, Endx, Endy) 
+
+PassConnectionsEPV <- PassConnections %>%
+  filter(EPV >= 0.020,
+         Successful_Passes == 1,
+         Passer %in% c("Dominik Szoboszlai", 
+                       "Alexis Mac Allister", 
+                       "Curtis Jones",
+                       "Ryan Gravenberch"))
+
+PassConnectionsKP <- PassConnections %>%
+  filter(EPV >= 0.020,
+         Successful_Passes == 1,
+         Key_Passes == 1,
+         Passer %in% c("Dominik Szoboszlai", 
+                       "Alexis Mac Allister", 
+                       "Curtis Jones",
+                       "Ryan Gravenberch"))
+
+PassConnectionsPP <- PassConnections %>%
+  filter(EPV >= 0.020,
+         Successful_Passes == 1,
+         Prog_Passes == 1,
+         Passer %in% c("Dominik Szoboszlai", 
+                       "Alexis Mac Allister", 
+                       "Curtis Jones",
+                       "Ryan Gravenberch"))
+
+```
+```{r}
+#| title: Successful Passes
+#| label: SPassing high EPV
+
+EPV_PassesFT <- PassConnectionsEPV %>%
+  ggplot(aes(x = x, y = y)) +
+  annotate_pitch(dimensions = pitch_opta, fill = "#E5E5E5", colour = "#95A5A6") +
+  theme_pitch() +
+  annotate("segment", y = 21.1, yend = 21.1, x = 0, xend = 100, linewidth = 0.5, colour = "#95A5A6", linetype = "longdash") +
+  annotate("segment", y = 36.8, yend = 36.8, x = 0, xend = 100, linewidth = 0.5, colour = "#95A5A6", linetype = "longdash") +
+  annotate("segment", y = 63.2, yend = 63.2, x = 0, xend = 100, linewidth = 0.5, colour = "#95A5A6", linetype = "longdash") +
+  annotate("segment", y = 78.9, yend = 78.9, x = 0, xend = 100, linewidth = 0.5, colour = "#95A5A6", linetype = "longdash") +
+  annotate("segment", y = 0, yend = 100, x = 17, xend = 17, linewidth = 0.5, colour = "#95A5A6", linetype = "longdash") +
+  annotate("segment", y = 0, yend = 100, x = 33.2, xend = 33.2, linewidth = 0.5, colour = "#95A5A6", linetype = "longdash") +
+  annotate("segment", y = 0, yend = 100, x = 50, xend = 50, linewidth = 0.5, colour = "#95A5A6", linetype = "longdash") +
+  annotate("segment", y = 0, yend = 100, x = 66.4, xend = 66.4, linewidth = 0.5, colour = "#95A5A6", linetype = "longdash") +
+  annotate("segment", y = 0, yend = 100, x = 83, xend = 83, linewidth = 0.5, colour = "#95A5A6", linetype = "longdash") +
+  
+  #geometrics
+  geom_segment(
+    aes(x = x, y = y, xend = Endx, yend = Endy, color = EPV),
+    arrow = arrow(type = "closed", 
+                  length = unit(0.2, "cm")),
+    lineend = "round",
+    linewidth = 0.1) +
+
+  scale_colour_gradientn(
+    colors = c("#0000FF", "#FF0000"),
+    values = scales::rescale(c(0, 1)), 
+    breaks = scales::breaks_width(0.01), 
+    name = "Progressive Pass") +
+
+  facet_wrap(~Passer , nrow = 2) +
+  
+  #formatting
+  labs(title = paste("Midfielders Successful Passes with threat higher than 0.2 EPV"), 
+       subtitle = paste0("Increased Blue = Higher Threat (EPV)"),
+       caption =  My_caption) +
+  theme(plot.background = element_rect(colour = "snow", fill = "snow"),
+        plot.caption = element_markdown(),
+        panel.background = element_rect(colour = "snow", fill = "snow"),
+        plot.title = element_text(colour = "black", face = "bold", size = 14),
+        plot.title.position = "plot",
+        plot.subtitle = element_text(colour = "black", size = 12),
+        legend.position = "none", 
+        legend.background = element_blank(), 
+        legend.key = element_blank(), 
+        strip.text = element_text(size = 5, colour = Color_Home_Text, face = "bold"),
+        strip.background = element_rect(fill = Color_Home, color = "black", linetype = "solid", linewidth = 0.5))
+
+EPV_PassesFT
+
+```
+```{r}
+#| title: Progressive Pases
+#| label: P Passing high EPV
+
+EPV_PassesFT <- PassConnectionsPP %>%
+  ggplot(aes(x = x, y = y)) +
+  annotate_pitch(dimensions = pitch_opta, fill = "#E5E5E5", colour = "#95A5A6") +
+  theme_pitch() +
+  annotate("segment", y = 21.1, yend = 21.1, x = 0, xend = 100, linewidth = 0.5, colour = "#95A5A6", linetype = "longdash") +
+  annotate("segment", y = 36.8, yend = 36.8, x = 0, xend = 100, linewidth = 0.5, colour = "#95A5A6", linetype = "longdash") +
+  annotate("segment", y = 63.2, yend = 63.2, x = 0, xend = 100, linewidth = 0.5, colour = "#95A5A6", linetype = "longdash") +
+  annotate("segment", y = 78.9, yend = 78.9, x = 0, xend = 100, linewidth = 0.5, colour = "#95A5A6", linetype = "longdash") +
+  annotate("segment", y = 0, yend = 100, x = 17, xend = 17, linewidth = 0.5, colour = "#95A5A6", linetype = "longdash") +
+  annotate("segment", y = 0, yend = 100, x = 33.2, xend = 33.2, linewidth = 0.5, colour = "#95A5A6", linetype = "longdash") +
+  annotate("segment", y = 0, yend = 100, x = 50, xend = 50, linewidth = 0.5, colour = "#95A5A6", linetype = "longdash") +
+  annotate("segment", y = 0, yend = 100, x = 66.4, xend = 66.4, linewidth = 0.5, colour = "#95A5A6", linetype = "longdash") +
+  annotate("segment", y = 0, yend = 100, x = 83, xend = 83, linewidth = 0.5, colour = "#95A5A6", linetype = "longdash") +
+  
+  #geometrics
+  geom_segment(
+    aes(x = x, y = y, xend = Endx, yend = Endy, color = EPV),
+    arrow = arrow(type = "closed", 
+                  length = unit(0.2, "cm")),
+    lineend = "round",
+    linewidth = 0.1) +
+  
+  scale_colour_gradientn(
+    colors = c("#0000FF", "#FF0000"),
+    values = scales::rescale(c(0, 1)), 
+    breaks = scales::breaks_width(0.01), 
+    name = "Progressive Pass") +
+  
+  facet_wrap(~Passer , nrow = 2) +
+  
+  #formatting
+  labs(title = paste("Midfielders Successful Progressive Passes with threat higher than 0.2 EPV"), 
+       subtitle = paste0("Increased Blue = Higher Threat (EPV)"),
+       caption =  My_caption) +
+  theme(plot.background = element_rect(colour = "snow", fill = "snow"),
+        plot.caption = element_markdown(),
+        panel.background = element_rect(colour = "snow", fill = "snow"),
+        plot.title = element_text(colour = "black", face = "bold", size = 14),
+        plot.title.position = "plot",
+        plot.subtitle = element_text(colour = "black", size = 12),
+        legend.position = "none", 
+        legend.background = element_blank(), 
+        legend.key = element_blank(), 
+        strip.text = element_text(size = 5, colour = Color_Home_Text, face = "bold"),
+        strip.background = element_rect(fill = Color_Home, color = "black", linetype = "solid", linewidth = 0.5))
+
+EPV_PassesFT
+
+```
+```{r}
+#| title: Key Passes
+#| label: KP Passing high EPV
+
+EPV_PassesFT <- PassConnectionsKP %>%
+  ggplot(aes(x = x, y = y)) +
+  annotate_pitch(dimensions = pitch_opta, fill = "#E5E5E5", colour = "#95A5A6") +
+  theme_pitch() +
+  annotate("segment", y = 21.1, yend = 21.1, x = 0, xend = 100, linewidth = 0.5, colour = "#95A5A6", linetype = "longdash") +
+  annotate("segment", y = 36.8, yend = 36.8, x = 0, xend = 100, linewidth = 0.5, colour = "#95A5A6", linetype = "longdash") +
+  annotate("segment", y = 63.2, yend = 63.2, x = 0, xend = 100, linewidth = 0.5, colour = "#95A5A6", linetype = "longdash") +
+  annotate("segment", y = 78.9, yend = 78.9, x = 0, xend = 100, linewidth = 0.5, colour = "#95A5A6", linetype = "longdash") +
+  annotate("segment", y = 0, yend = 100, x = 17, xend = 17, linewidth = 0.5, colour = "#95A5A6", linetype = "longdash") +
+  annotate("segment", y = 0, yend = 100, x = 33.2, xend = 33.2, linewidth = 0.5, colour = "#95A5A6", linetype = "longdash") +
+  annotate("segment", y = 0, yend = 100, x = 50, xend = 50, linewidth = 0.5, colour = "#95A5A6", linetype = "longdash") +
+  annotate("segment", y = 0, yend = 100, x = 66.4, xend = 66.4, linewidth = 0.5, colour = "#95A5A6", linetype = "longdash") +
+  annotate("segment", y = 0, yend = 100, x = 83, xend = 83, linewidth = 0.5, colour = "#95A5A6", linetype = "longdash") +
+  
+  #geometrics
+  geom_segment(
+    aes(x = x, y = y, xend = Endx, yend = Endy, color = EPV),
+    arrow = arrow(type = "closed", 
+                  length = unit(0.2, "cm")),
+    lineend = "round",
+    linewidth = 0.1) +
+  
+  scale_colour_gradientn(
+    colors = c("#0000FF", "#FF0000"),
+    values = scales::rescale(c(0, 1)), 
+    breaks = scales::breaks_width(0.01), 
+    name = "Progressive Pass") +
+  
+  
+  facet_wrap(~Passer , nrow = 2) +
+  
+  #formatting
+  labs(title = paste("Midfielders Successful Key Passes with threat higher than 0.2 EPV"), 
+       subtitle = paste0("Increased Blue = Higher Threat (EPV)"),
+       caption =  My_caption) +
+  theme(plot.background = element_rect(colour = "snow", fill = "snow"),
+        plot.caption = element_markdown(),
+        panel.background = element_rect(colour = "snow", fill = "snow"),
+        plot.title = element_text(colour = "black", face = "bold", size = 14),
+        plot.title.position = "plot",
+        plot.subtitle = element_text(colour = "black", size = 12),
+        legend.position = "none", 
+        legend.background = element_blank(), 
+        legend.key = element_blank(), 
+        strip.text = element_text(size = 5, colour = Color_Home_Text, face = "bold"),
+        strip.background = element_rect(fill = Color_Home, color = "black", linetype = "solid", linewidth = 0.5))
+
+EPV_PassesFT
+
+```
 
 ### Season per game Profiles {.tabset}
 ```{r}
@@ -6001,6 +6209,215 @@ Player_Summary_Plot_Home
 
 ```
 
+### Passing Profiles {.tabset}
+```{r}
+#| output: false
+#| echo: false
+#| message: false
+#| warning: false
+#| label: player passing profiles setup EPL
+
+PassConnections <- EPLSeasonData 
+PassConnections <- shift_column(data = PassConnections, columns = "playerId", new_names = "receiver", len = 1, up = TRUE)
+PassConnections <- shift_column(data = PassConnections, columns = "TeamName", new_names = "receiver_team", len = 1, up = TRUE)
+PassConnections <- shift_column(data = PassConnections, columns = "x", new_names = "Endx", len = 1, up = TRUE)
+PassConnections <- shift_column(data = PassConnections, columns = "y", new_names = "Endy", len = 1, up = TRUE)
+
+# number of passess between players
+PassConnections <- PassConnections %>%
+  filter(type == "Pass",
+         TeamName == "Liverpool",
+         receiver_team == "Liverpool") %>% 
+  select(Passer = playerId, Receiver = receiver, Passer_Team = teamId, Receiver_Team = receiver_team, Successful_Passes, BCs, Key_Passes, Prog_Passes, EPV = EPVvalue, x, y, Endx, Endy) 
+
+PassConnectionsEPV <- PassConnections %>%
+  filter(EPV >= 0.020,
+         Successful_Passes == 1,
+         Passer %in% c("Dominik Szoboszlai", 
+                       "Alexis Mac Allister", 
+                       "Curtis Jones",
+                       "Ryan Gravenberch"))
+
+PassConnectionsKP <- PassConnections %>%
+  filter(EPV >= 0.020,
+         Successful_Passes == 1,
+         Key_Passes == 1,
+         Passer %in% c("Dominik Szoboszlai", 
+                       "Alexis Mac Allister", 
+                       "Curtis Jones",
+                       "Ryan Gravenberch"))
+
+PassConnectionsPP <- PassConnections %>%
+  filter(EPV >= 0.020,
+         Successful_Passes == 1,
+         Prog_Passes == 1,
+         Passer %in% c("Dominik Szoboszlai", 
+                       "Alexis Mac Allister", 
+                       "Curtis Jones",
+                       "Ryan Gravenberch"))
+
+```
+```{r}
+#| title: Successful Passes
+#| label: SPassing high EPV EPL
+
+EPV_PassesFT <- PassConnectionsEPV %>%
+  ggplot(aes(x = x, y = y)) +
+  annotate_pitch(dimensions = pitch_opta, fill = "#E5E5E5", colour = "#95A5A6") +
+  theme_pitch() +
+  annotate("segment", y = 21.1, yend = 21.1, x = 0, xend = 100, linewidth = 0.5, colour = "#95A5A6", linetype = "longdash") +
+  annotate("segment", y = 36.8, yend = 36.8, x = 0, xend = 100, linewidth = 0.5, colour = "#95A5A6", linetype = "longdash") +
+  annotate("segment", y = 63.2, yend = 63.2, x = 0, xend = 100, linewidth = 0.5, colour = "#95A5A6", linetype = "longdash") +
+  annotate("segment", y = 78.9, yend = 78.9, x = 0, xend = 100, linewidth = 0.5, colour = "#95A5A6", linetype = "longdash") +
+  annotate("segment", y = 0, yend = 100, x = 17, xend = 17, linewidth = 0.5, colour = "#95A5A6", linetype = "longdash") +
+  annotate("segment", y = 0, yend = 100, x = 33.2, xend = 33.2, linewidth = 0.5, colour = "#95A5A6", linetype = "longdash") +
+  annotate("segment", y = 0, yend = 100, x = 50, xend = 50, linewidth = 0.5, colour = "#95A5A6", linetype = "longdash") +
+  annotate("segment", y = 0, yend = 100, x = 66.4, xend = 66.4, linewidth = 0.5, colour = "#95A5A6", linetype = "longdash") +
+  annotate("segment", y = 0, yend = 100, x = 83, xend = 83, linewidth = 0.5, colour = "#95A5A6", linetype = "longdash") +
+  
+  #geometrics
+  geom_segment(
+    aes(x = x, y = y, xend = Endx, yend = Endy, color = EPV),
+    arrow = arrow(type = "closed", 
+                  length = unit(0.2, "cm")),
+    lineend = "round",
+    linewidth = 0.1) +
+
+  scale_colour_gradientn(
+    colors = c("#0000FF", "#FF0000"),
+    values = scales::rescale(c(0, 1)), 
+    breaks = scales::breaks_width(0.01), 
+    name = "Progressive Pass") +
+
+  facet_wrap(~Passer , nrow = 2) +
+  
+  #formatting
+  labs(title = paste("Midfielders Successful Passes with threat higher than 0.2 EPV"), 
+       subtitle = paste0("Increased Blue = Higher Threat (EPV)"),
+       caption =  My_caption) +
+  theme(plot.background = element_rect(colour = "snow", fill = "snow"),
+        plot.caption = element_markdown(),
+        panel.background = element_rect(colour = "snow", fill = "snow"),
+        plot.title = element_text(colour = "black", face = "bold", size = 14),
+        plot.title.position = "plot",
+        plot.subtitle = element_text(colour = "black", size = 12),
+        legend.position = "none", 
+        legend.background = element_blank(), 
+        legend.key = element_blank(), 
+        strip.text = element_text(size = 5, colour = Color_Home_Text, face = "bold"),
+        strip.background = element_rect(fill = Color_Home, color = "black", linetype = "solid", linewidth = 0.5))
+
+EPV_PassesFT
+
+```
+```{r}
+#| title: Progressive Pases
+#| label: P Passing high EPV EPL
+
+EPV_PassesFT <- PassConnectionsPP %>%
+  ggplot(aes(x = x, y = y)) +
+  annotate_pitch(dimensions = pitch_opta, fill = "#E5E5E5", colour = "#95A5A6") +
+  theme_pitch() +
+  annotate("segment", y = 21.1, yend = 21.1, x = 0, xend = 100, linewidth = 0.5, colour = "#95A5A6", linetype = "longdash") +
+  annotate("segment", y = 36.8, yend = 36.8, x = 0, xend = 100, linewidth = 0.5, colour = "#95A5A6", linetype = "longdash") +
+  annotate("segment", y = 63.2, yend = 63.2, x = 0, xend = 100, linewidth = 0.5, colour = "#95A5A6", linetype = "longdash") +
+  annotate("segment", y = 78.9, yend = 78.9, x = 0, xend = 100, linewidth = 0.5, colour = "#95A5A6", linetype = "longdash") +
+  annotate("segment", y = 0, yend = 100, x = 17, xend = 17, linewidth = 0.5, colour = "#95A5A6", linetype = "longdash") +
+  annotate("segment", y = 0, yend = 100, x = 33.2, xend = 33.2, linewidth = 0.5, colour = "#95A5A6", linetype = "longdash") +
+  annotate("segment", y = 0, yend = 100, x = 50, xend = 50, linewidth = 0.5, colour = "#95A5A6", linetype = "longdash") +
+  annotate("segment", y = 0, yend = 100, x = 66.4, xend = 66.4, linewidth = 0.5, colour = "#95A5A6", linetype = "longdash") +
+  annotate("segment", y = 0, yend = 100, x = 83, xend = 83, linewidth = 0.5, colour = "#95A5A6", linetype = "longdash") +
+  
+  #geometrics
+  geom_segment(
+    aes(x = x, y = y, xend = Endx, yend = Endy, color = EPV),
+    arrow = arrow(type = "closed", 
+                  length = unit(0.2, "cm")),
+    lineend = "round",
+    linewidth = 0.1) +
+  
+  scale_colour_gradientn(
+    colors = c("#0000FF", "#FF0000"),
+    values = scales::rescale(c(0, 1)), 
+    breaks = scales::breaks_width(0.01), 
+    name = "Progressive Pass") +
+  
+  facet_wrap(~Passer , nrow = 2) +
+  
+  #formatting
+  labs(title = paste("Midfielders Successful Progressive Passes with threat higher than 0.2 EPV"), 
+       subtitle = paste0("Increased Blue = Higher Threat (EPV)"),
+       caption =  My_caption) +
+  theme(plot.background = element_rect(colour = "snow", fill = "snow"),
+        plot.caption = element_markdown(),
+        panel.background = element_rect(colour = "snow", fill = "snow"),
+        plot.title = element_text(colour = "black", face = "bold", size = 14),
+        plot.title.position = "plot",
+        plot.subtitle = element_text(colour = "black", size = 12),
+        legend.position = "none", 
+        legend.background = element_blank(), 
+        legend.key = element_blank(), 
+        strip.text = element_text(size = 5, colour = Color_Home_Text, face = "bold"),
+        strip.background = element_rect(fill = Color_Home, color = "black", linetype = "solid", linewidth = 0.5))
+
+EPV_PassesFT
+
+```
+```{r}
+#| title: Key Passes
+#| label: KP Passing high EPV EPL
+
+EPV_PassesFT <- PassConnectionsKP %>%
+  ggplot(aes(x = x, y = y)) +
+  annotate_pitch(dimensions = pitch_opta, fill = "#E5E5E5", colour = "#95A5A6") +
+  theme_pitch() +
+  annotate("segment", y = 21.1, yend = 21.1, x = 0, xend = 100, linewidth = 0.5, colour = "#95A5A6", linetype = "longdash") +
+  annotate("segment", y = 36.8, yend = 36.8, x = 0, xend = 100, linewidth = 0.5, colour = "#95A5A6", linetype = "longdash") +
+  annotate("segment", y = 63.2, yend = 63.2, x = 0, xend = 100, linewidth = 0.5, colour = "#95A5A6", linetype = "longdash") +
+  annotate("segment", y = 78.9, yend = 78.9, x = 0, xend = 100, linewidth = 0.5, colour = "#95A5A6", linetype = "longdash") +
+  annotate("segment", y = 0, yend = 100, x = 17, xend = 17, linewidth = 0.5, colour = "#95A5A6", linetype = "longdash") +
+  annotate("segment", y = 0, yend = 100, x = 33.2, xend = 33.2, linewidth = 0.5, colour = "#95A5A6", linetype = "longdash") +
+  annotate("segment", y = 0, yend = 100, x = 50, xend = 50, linewidth = 0.5, colour = "#95A5A6", linetype = "longdash") +
+  annotate("segment", y = 0, yend = 100, x = 66.4, xend = 66.4, linewidth = 0.5, colour = "#95A5A6", linetype = "longdash") +
+  annotate("segment", y = 0, yend = 100, x = 83, xend = 83, linewidth = 0.5, colour = "#95A5A6", linetype = "longdash") +
+  
+  #geometrics
+  geom_segment(
+    aes(x = x, y = y, xend = Endx, yend = Endy, color = EPV),
+    arrow = arrow(type = "closed", 
+                  length = unit(0.2, "cm")),
+    lineend = "round",
+    linewidth = 0.1) +
+  
+  scale_colour_gradientn(
+    colors = c("#0000FF", "#FF0000"),
+    values = scales::rescale(c(0, 1)), 
+    breaks = scales::breaks_width(0.01), 
+    name = "Progressive Pass") +
+  
+  
+  facet_wrap(~Passer , nrow = 2) +
+  
+  #formatting
+  labs(title = paste("Midfielders Successful Key Passes with threat higher than 0.2 EPV"), 
+       subtitle = paste0("Increased Blue = Higher Threat (EPV)"),
+       caption =  My_caption) +
+  theme(plot.background = element_rect(colour = "snow", fill = "snow"),
+        plot.caption = element_markdown(),
+        panel.background = element_rect(colour = "snow", fill = "snow"),
+        plot.title = element_text(colour = "black", face = "bold", size = 14),
+        plot.title.position = "plot",
+        plot.subtitle = element_text(colour = "black", size = 12),
+        legend.position = "none", 
+        legend.background = element_blank(), 
+        legend.key = element_blank(), 
+        strip.text = element_text(size = 5, colour = Color_Home_Text, face = "bold"),
+        strip.background = element_rect(fill = Color_Home, color = "black", linetype = "solid", linewidth = 0.5))
+
+EPV_PassesFT
+
+```
+
 ### Season per game Profiles {.tabset}
 ```{r}
 #| output: false
@@ -8598,6 +9015,215 @@ Player_Summary_Plot_Home <- Player_Goal_data_Home %>%
         legend.position = "top")
 
 Player_Summary_Plot_Home
+
+```
+
+### Passing Profiles {.tabset}
+```{r}
+#| output: false
+#| echo: false
+#| message: false
+#| warning: false
+#| label: player passing profiles setup CL
+
+PassConnections <- CLSeasonData 
+PassConnections <- shift_column(data = PassConnections, columns = "playerId", new_names = "receiver", len = 1, up = TRUE)
+PassConnections <- shift_column(data = PassConnections, columns = "TeamName", new_names = "receiver_team", len = 1, up = TRUE)
+PassConnections <- shift_column(data = PassConnections, columns = "x", new_names = "Endx", len = 1, up = TRUE)
+PassConnections <- shift_column(data = PassConnections, columns = "y", new_names = "Endy", len = 1, up = TRUE)
+
+# number of passess between players
+PassConnections <- PassConnections %>%
+  filter(type == "Pass",
+         TeamName == "Liverpool",
+         receiver_team == "Liverpool") %>% 
+  select(Passer = playerId, Receiver = receiver, Passer_Team = teamId, Receiver_Team = receiver_team, Successful_Passes, BCs, Key_Passes, Prog_Passes, EPV = EPVvalue, x, y, Endx, Endy) 
+
+PassConnectionsEPV <- PassConnections %>%
+  filter(EPV >= 0.020,
+         Successful_Passes == 1,
+         Passer %in% c("Dominik Szoboszlai", 
+                       "Alexis Mac Allister", 
+                       "Curtis Jones",
+                       "Ryan Gravenberch"))
+
+PassConnectionsKP <- PassConnections %>%
+  filter(EPV >= 0.020,
+         Successful_Passes == 1,
+         Key_Passes == 1,
+         Passer %in% c("Dominik Szoboszlai", 
+                       "Alexis Mac Allister", 
+                       "Curtis Jones",
+                       "Ryan Gravenberch"))
+
+PassConnectionsPP <- PassConnections %>%
+  filter(EPV >= 0.020,
+         Successful_Passes == 1,
+         Prog_Passes == 1,
+         Passer %in% c("Dominik Szoboszlai", 
+                       "Alexis Mac Allister", 
+                       "Curtis Jones",
+                       "Ryan Gravenberch"))
+
+```
+```{r}
+#| title: Successful Passes
+#| label: SPassing high EPV CL
+
+EPV_PassesFT <- PassConnectionsEPV %>%
+  ggplot(aes(x = x, y = y)) +
+  annotate_pitch(dimensions = pitch_opta, fill = "#E5E5E5", colour = "#95A5A6") +
+  theme_pitch() +
+  annotate("segment", y = 21.1, yend = 21.1, x = 0, xend = 100, linewidth = 0.5, colour = "#95A5A6", linetype = "longdash") +
+  annotate("segment", y = 36.8, yend = 36.8, x = 0, xend = 100, linewidth = 0.5, colour = "#95A5A6", linetype = "longdash") +
+  annotate("segment", y = 63.2, yend = 63.2, x = 0, xend = 100, linewidth = 0.5, colour = "#95A5A6", linetype = "longdash") +
+  annotate("segment", y = 78.9, yend = 78.9, x = 0, xend = 100, linewidth = 0.5, colour = "#95A5A6", linetype = "longdash") +
+  annotate("segment", y = 0, yend = 100, x = 17, xend = 17, linewidth = 0.5, colour = "#95A5A6", linetype = "longdash") +
+  annotate("segment", y = 0, yend = 100, x = 33.2, xend = 33.2, linewidth = 0.5, colour = "#95A5A6", linetype = "longdash") +
+  annotate("segment", y = 0, yend = 100, x = 50, xend = 50, linewidth = 0.5, colour = "#95A5A6", linetype = "longdash") +
+  annotate("segment", y = 0, yend = 100, x = 66.4, xend = 66.4, linewidth = 0.5, colour = "#95A5A6", linetype = "longdash") +
+  annotate("segment", y = 0, yend = 100, x = 83, xend = 83, linewidth = 0.5, colour = "#95A5A6", linetype = "longdash") +
+  
+  #geometrics
+  geom_segment(
+    aes(x = x, y = y, xend = Endx, yend = Endy, color = EPV),
+    arrow = arrow(type = "closed", 
+                  length = unit(0.2, "cm")),
+    lineend = "round",
+    linewidth = 0.1) +
+
+  scale_colour_gradientn(
+    colors = c("#0000FF", "#FF0000"),
+    values = scales::rescale(c(0, 1)), 
+    breaks = scales::breaks_width(0.01), 
+    name = "Progressive Pass") +
+
+  facet_wrap(~Passer , nrow = 2) +
+  
+  #formatting
+  labs(title = paste("Midfielders Successful Passes with threat higher than 0.2 EPV"), 
+       subtitle = paste0("Increased Blue = Higher Threat (EPV)"),
+       caption =  My_caption) +
+  theme(plot.background = element_rect(colour = "snow", fill = "snow"),
+        plot.caption = element_markdown(),
+        panel.background = element_rect(colour = "snow", fill = "snow"),
+        plot.title = element_text(colour = "black", face = "bold", size = 14),
+        plot.title.position = "plot",
+        plot.subtitle = element_text(colour = "black", size = 12),
+        legend.position = "none", 
+        legend.background = element_blank(), 
+        legend.key = element_blank(), 
+        strip.text = element_text(size = 5, colour = Color_Home_Text, face = "bold"),
+        strip.background = element_rect(fill = Color_Home, color = "black", linetype = "solid", linewidth = 0.5))
+
+EPV_PassesFT
+
+```
+```{r}
+#| title: Progressive Pases
+#| label: P Passing high EPV CL
+
+EPV_PassesFT <- PassConnectionsPP %>%
+  ggplot(aes(x = x, y = y)) +
+  annotate_pitch(dimensions = pitch_opta, fill = "#E5E5E5", colour = "#95A5A6") +
+  theme_pitch() +
+  annotate("segment", y = 21.1, yend = 21.1, x = 0, xend = 100, linewidth = 0.5, colour = "#95A5A6", linetype = "longdash") +
+  annotate("segment", y = 36.8, yend = 36.8, x = 0, xend = 100, linewidth = 0.5, colour = "#95A5A6", linetype = "longdash") +
+  annotate("segment", y = 63.2, yend = 63.2, x = 0, xend = 100, linewidth = 0.5, colour = "#95A5A6", linetype = "longdash") +
+  annotate("segment", y = 78.9, yend = 78.9, x = 0, xend = 100, linewidth = 0.5, colour = "#95A5A6", linetype = "longdash") +
+  annotate("segment", y = 0, yend = 100, x = 17, xend = 17, linewidth = 0.5, colour = "#95A5A6", linetype = "longdash") +
+  annotate("segment", y = 0, yend = 100, x = 33.2, xend = 33.2, linewidth = 0.5, colour = "#95A5A6", linetype = "longdash") +
+  annotate("segment", y = 0, yend = 100, x = 50, xend = 50, linewidth = 0.5, colour = "#95A5A6", linetype = "longdash") +
+  annotate("segment", y = 0, yend = 100, x = 66.4, xend = 66.4, linewidth = 0.5, colour = "#95A5A6", linetype = "longdash") +
+  annotate("segment", y = 0, yend = 100, x = 83, xend = 83, linewidth = 0.5, colour = "#95A5A6", linetype = "longdash") +
+  
+  #geometrics
+  geom_segment(
+    aes(x = x, y = y, xend = Endx, yend = Endy, color = EPV),
+    arrow = arrow(type = "closed", 
+                  length = unit(0.2, "cm")),
+    lineend = "round",
+    linewidth = 0.1) +
+  
+  scale_colour_gradientn(
+    colors = c("#0000FF", "#FF0000"),
+    values = scales::rescale(c(0, 1)), 
+    breaks = scales::breaks_width(0.01), 
+    name = "Progressive Pass") +
+  
+  facet_wrap(~Passer , nrow = 2) +
+  
+  #formatting
+  labs(title = paste("Midfielders Successful Progressive Passes with threat higher than 0.2 EPV"), 
+       subtitle = paste0("Increased Blue = Higher Threat (EPV)"),
+       caption =  My_caption) +
+  theme(plot.background = element_rect(colour = "snow", fill = "snow"),
+        plot.caption = element_markdown(),
+        panel.background = element_rect(colour = "snow", fill = "snow"),
+        plot.title = element_text(colour = "black", face = "bold", size = 14),
+        plot.title.position = "plot",
+        plot.subtitle = element_text(colour = "black", size = 12),
+        legend.position = "none", 
+        legend.background = element_blank(), 
+        legend.key = element_blank(), 
+        strip.text = element_text(size = 5, colour = Color_Home_Text, face = "bold"),
+        strip.background = element_rect(fill = Color_Home, color = "black", linetype = "solid", linewidth = 0.5))
+
+EPV_PassesFT
+
+```
+```{r}
+#| title: Key Passes
+#| label: KP Passing high EPV CL
+
+EPV_PassesFT <- PassConnectionsKP %>%
+  ggplot(aes(x = x, y = y)) +
+  annotate_pitch(dimensions = pitch_opta, fill = "#E5E5E5", colour = "#95A5A6") +
+  theme_pitch() +
+  annotate("segment", y = 21.1, yend = 21.1, x = 0, xend = 100, linewidth = 0.5, colour = "#95A5A6", linetype = "longdash") +
+  annotate("segment", y = 36.8, yend = 36.8, x = 0, xend = 100, linewidth = 0.5, colour = "#95A5A6", linetype = "longdash") +
+  annotate("segment", y = 63.2, yend = 63.2, x = 0, xend = 100, linewidth = 0.5, colour = "#95A5A6", linetype = "longdash") +
+  annotate("segment", y = 78.9, yend = 78.9, x = 0, xend = 100, linewidth = 0.5, colour = "#95A5A6", linetype = "longdash") +
+  annotate("segment", y = 0, yend = 100, x = 17, xend = 17, linewidth = 0.5, colour = "#95A5A6", linetype = "longdash") +
+  annotate("segment", y = 0, yend = 100, x = 33.2, xend = 33.2, linewidth = 0.5, colour = "#95A5A6", linetype = "longdash") +
+  annotate("segment", y = 0, yend = 100, x = 50, xend = 50, linewidth = 0.5, colour = "#95A5A6", linetype = "longdash") +
+  annotate("segment", y = 0, yend = 100, x = 66.4, xend = 66.4, linewidth = 0.5, colour = "#95A5A6", linetype = "longdash") +
+  annotate("segment", y = 0, yend = 100, x = 83, xend = 83, linewidth = 0.5, colour = "#95A5A6", linetype = "longdash") +
+  
+  #geometrics
+  geom_segment(
+    aes(x = x, y = y, xend = Endx, yend = Endy, color = EPV),
+    arrow = arrow(type = "closed", 
+                  length = unit(0.2, "cm")),
+    lineend = "round",
+    linewidth = 0.1) +
+  
+  scale_colour_gradientn(
+    colors = c("#0000FF", "#FF0000"),
+    values = scales::rescale(c(0, 1)), 
+    breaks = scales::breaks_width(0.01), 
+    name = "Progressive Pass") +
+  
+  
+  facet_wrap(~Passer , nrow = 2) +
+  
+  #formatting
+  labs(title = paste("Midfielders Successful Key Passes with threat higher than 0.2 EPV"), 
+       subtitle = paste0("Increased Blue = Higher Threat (EPV)"),
+       caption =  My_caption) +
+  theme(plot.background = element_rect(colour = "snow", fill = "snow"),
+        plot.caption = element_markdown(),
+        panel.background = element_rect(colour = "snow", fill = "snow"),
+        plot.title = element_text(colour = "black", face = "bold", size = 14),
+        plot.title.position = "plot",
+        plot.subtitle = element_text(colour = "black", size = 12),
+        legend.position = "none", 
+        legend.background = element_blank(), 
+        legend.key = element_blank(), 
+        strip.text = element_text(size = 5, colour = Color_Home_Text, face = "bold"),
+        strip.background = element_rect(fill = Color_Home, color = "black", linetype = "solid", linewidth = 0.5))
+
+EPV_PassesFT
 
 ```
 
